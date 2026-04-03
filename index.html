@@ -264,10 +264,10 @@
     <div class="section-title">📍 Your Hit Position on Court</div>
     <div class="controls-grid">
       <div class="control-group">
-        <label class="control-label">Hit Distance from Your Baseline (m) <span class="hint">0 = on baseline · 11.89 = at net</span></label>
+        <label class="control-label">Hit Distance from Your Baseline (m) <span class="hint">negative = behind baseline · 0 = on baseline · 11.89 = at net</span></label>
         <div class="slider-and-input">
-          <input type="range"  min="0" max="11.89" step="0.1" value="0" id="hitpos">
-          <input type="number" min="0" max="11.89" step="0.1" value="0" id="hitpos-input">
+          <input type="range"  min="-10" max="11.89" step="0.1" value="0" id="hitpos">
+          <input type="number" min="-10" max="11.89" step="0.1" value="0" id="hitpos-input">
         </div>
       </div>
       <div id="position-description" style="display:flex;align-items:center;font-size:.85rem;color:#FFC107;font-weight:600;gap:8px;">
@@ -485,6 +485,8 @@
   }
 
   function positionLabel(hitX) {
+    if (hitX < -5)   return '🌳 Deep behind the baseline';
+    if (hitX < -1)   return '↩️ Behind the baseline';
     if (hitX < 0.2)  return '📌 Standing on the baseline';
     if (hitX < 3)    return '🏃 Just inside the baseline';
     if (hitX < YOUR_SERVICE_LINE_ABS - 0.2) return '🎾 In no-man\'s land';
@@ -633,6 +635,7 @@
           order: 7
         }] : [])
       ];
+      chart.options.scales.x.min = Math.min(hitX - 0.5, -0.5);
       chart.options.scales.x.max = xMax;
       chart.update('none');
     }
@@ -651,7 +654,7 @@
       { s:'ht',     n:'ht-input',     min:0.5,   max:5     },
       { s:'spin',   n:'spin-input',   min:-5000, max:5000  },
       { s:'steps',  n:'steps-input',  min:3,     max:20    },
-      { s:'hitpos', n:'hitpos-input', min:0,     max:11.89 }
+      { s:'hitpos', n:'hitpos-input', min:-10,   max:11.89 }
     ].forEach(({ s, n, min, max }) => {
       const sl = document.getElementById(s);
       const nu = document.getElementById(n);
@@ -703,8 +706,7 @@
         x: {
           title: { display: true, text: 'Absolute distance from your baseline (m)', color: '#FFC107', font: { size: 12 } },
           grid:  { color: 'rgba(255,255,255,.08)' },
-          ticks: { color: '#a8c9b8' },
-          min: 0
+          ticks: { color: '#a8c9b8' }
         },
         y: {
           title: { display: true, text: 'Height (m)', color: '#FFC107', font: { size: 12 } },
