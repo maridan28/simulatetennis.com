@@ -95,6 +95,17 @@
       50% { transform: scale(1.05); }
     }
 
+    @keyframes splashAnimation {
+      0% { opacity: 0; transform: scale(0.5) rotateZ(0deg); }
+      50% { opacity: 1; transform: scale(1.2) rotateZ(180deg); }
+      100% { opacity: 0; transform: scale(0.8) rotateZ(360deg); }
+    }
+
+    @keyframes splashIn {
+      0% { opacity: 0; transform: translateY(100px) scale(0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
@@ -102,6 +113,55 @@
       min-height: 100vh;
       padding: 2rem 1rem;
       position: relative;
+    }
+
+    /* SPLASH SCREEN ANIMATION */
+    #splashScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOutOverlay 5s ease-out forwards;
+    }
+
+    .splash-container {
+      text-align: center;
+      animation: splashIn 1s ease-out;
+    }
+
+    .splash-ball {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      margin: 0 auto 30px;
+      box-shadow: 0 8px 40px rgba(255, 193, 7, 0.8), 0 0 50px rgba(76, 175, 80, 0.6);
+      animation: ballSpin 2s linear infinite;
+    }
+
+    .splash-text h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #4CAF50;
+      margin-bottom: 15px;
+      animation: titleGlow 3s ease-in-out infinite;
+      letter-spacing: 3px;
+    }
+
+    .splash-text p {
+      font-size: 1.5rem;
+      color: #FFC107;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: glow 2s ease-in-out infinite 0.5s;
     }
 
     /* PASSWORD LOCK SCREEN */
@@ -117,6 +177,7 @@
       align-items: center;
       justify-content: center;
       backdrop-filter: blur(5px);
+      animation: fadeIn 0.5s ease-out;
     }
 
     .password-container {
@@ -660,6 +721,123 @@
       border-radius: 1px;
     }
 
+    /* TENNIS COURT VISUALIZATION */
+    .court-section {
+      background: rgba(45, 90, 61, 0.6);
+      border-radius: 18px;
+      border: 2px solid rgba(76, 175, 80, 0.4);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.7s ease-out 0.2s backwards;
+    }
+
+    .court-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
+      border: 3px solid #fff;
+      border-radius: 12px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    /* Court lines */
+    .court-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background: #fff;
+      transform: translateX(-50%);
+    }
+
+    .court-container::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .court-label {
+      position: absolute;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+    }
+
+    .net-line {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: repeating-linear-gradient(
+        90deg,
+        #fff 0px,
+        #fff 2px,
+        transparent 2px,
+        transparent 6px
+      );
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      z-index: 5;
+    }
+
+    .ball-marker {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    .launch-point {
+      position: absolute;
+      bottom: 20px;
+      left: 10%;
+      width: 16px;
+      height: 16px;
+      background: #4CAF50;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+      z-index: 8;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .landing-point {
+      position: absolute;
+      bottom: 20px;
+      width: 14px;
+      height: 14px;
+      background: #FF6B6B;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+      z-index: 8;
+    }
+
+    .trajectory-line {
+      position: absolute;
+      bottom: 27px;
+      left: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(255, 107, 107, 0.2));
+      transform-origin: left;
+      z-index: 7;
+    }
+
     .table-section {
       background: rgba(45, 90, 61, 0.6);
       border-radius: 18px;
@@ -736,10 +914,22 @@
       .stats-section { grid-template-columns: repeat(2, 1fr); }
       .chart-container { height: 300px; }
       .intro-court { width: 90%; height: 300px; }
+      .court-container { height: 200px; }
     }
   </style>
 </head>
 <body>
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen">
+    <div class="splash-container">
+      <div class="splash-ball"></div>
+      <div class="splash-text">
+        <h1>🎾 TENNIS</h1>
+        <p>Trajectory Simulator</p>
+      </div>
+    </div>
+  </div>
+
   <!-- PASSWORD PROTECTION -->
   <div id="passwordOverlay">
     <div class="password-container">
@@ -895,6 +1085,21 @@
           <div class="legend-line" style="background:#FF9800;"></div>
           <span>Baseline (23.77 m)</span>
         </div>
+      </div>
+    </div>
+
+    <!-- TENNIS COURT VISUALIZATION -->
+    <div class="court-section">
+      <div class="section-title">🏟️ Tennis Court Overview</div>
+      <div class="court-container">
+        <div class="court-label" style="top: 10px; left: 20px;">↑ Initial Position</div>
+        <div class="court-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">NET</div>
+        <div class="court-label" style="bottom: 10px; right: 20px;">↑ Landing Point</div>
+        
+        <div class="net-line"></div>
+        <div class="launch-point"></div>
+        <div class="landing-point" id="landingPoint"></div>
+        <div class="trajectory-line" id="trajectoryLine"></div>
       </div>
     </div>
 
@@ -1257,6 +1462,9 @@
           chart.update();
         }
 
+        // Update court visualization
+        updateCourtVisualization(finalX);
+
         // Update table
         const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
         const tbl = document.getElementById('tbl');
@@ -1275,6 +1483,28 @@
       } catch (error) {
         console.error('Update error:', error);
       }
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // COURT VISUALIZATION UPDATE
+    // ════════════════════════════════════════════════════════════════════════
+    function updateCourtVisualization(finalX) {
+      const courtContainer = document.querySelector('.court-container');
+      const containerWidth = courtContainer.offsetWidth;
+      const maxDistance = 26; // approximately baseline
+      
+      // Calculate landing point position as percentage of court width
+      const landingPercentage = Math.min((finalX / maxDistance) * 100, 95);
+      
+      const landingPoint = document.getElementById('landingPoint');
+      const trajectoryLine = document.getElementById('trajectoryLine');
+      
+      // Update landing point position
+      landingPoint.style.left = (10 + (landingPercentage - 10) * 0.8) + '%';
+      
+      // Update trajectory line width
+      const trajectoryWidth = (landingPercentage - 10) * 0.8;
+      trajectoryLine.style.width = trajectoryWidth + '%';
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -1329,20 +1559,3 @@
           
           // Update both
           sliderElem.value = value;
-          inputElem.value = value;
-          update();
-        });
-      });
-    }
-
-    // ════════════════════════════════════════════════════════════════════════
-    // INITIALIZATION
-    // ════════════════════════════════════════════════════════════════════════
-    document.addEventListener('DOMContentLoaded', function() {
-      initChart();
-      syncControls();
-      update();
-    });
-  </script>
-</body>
-</html>
