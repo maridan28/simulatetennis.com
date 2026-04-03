@@ -16,10 +16,6 @@
       0%, 100% { transform: scale(1); }
       50%       { transform: scale(1.08); }
     }
-    @keyframes glow {
-      0%, 100% { text-shadow: 0 0 0 rgba(76,175,80,0); }
-      50%       { text-shadow: 0 0 8px rgba(76,175,80,.8), 0 0 25px rgba(76,175,80,.5); }
-    }
     @keyframes titleGlow {
       0%, 100% { text-shadow: 0 0 10px rgba(255,193,7,.3), 0 0 20px rgba(76,175,80,.2); }
       50%       { text-shadow: 0 0 20px rgba(255,193,7,.6), 0 0 40px rgba(76,175,80,.4); }
@@ -159,25 +155,6 @@
       box-shadow: 0 0 12px rgba(255,193,7,.25);
     }
 
-    /* ── Shot buttons ── */
-    .shot-type-buttons { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-    .shot-btn {
-      padding: 8px 14px;
-      background: rgba(76,175,80,.2);
-      border: 2px solid rgba(76,175,80,.4);
-      border-radius: 8px;
-      color: #a8c9b8;
-      font-weight: 700;
-      font-size: .7rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all .3s;
-      white-space: nowrap;
-    }
-    .shot-btn:hover  { border-color: rgba(255,193,7,.6); }
-    .shot-btn.active { background: rgba(76,175,80,.8); border-color: #FFC107; color: #fff; box-shadow: 0 0 15px rgba(76,175,80,.8); }
-
     /* ── Stats ── */
     .stats-section {
       display: grid;
@@ -205,11 +182,24 @@
     .stat-value { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 900; color: #4CAF50; min-height: 2rem; word-break: break-all; }
     .stat-unit  { font-size: .75rem; color: #FFC107; font-weight: 600; margin-top: 4px; }
 
+    /* ── Net status badge ── */
+    .net-status {
+      display: inline-block;
+      margin-top: .75rem;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+    .net-status.clear { background: rgba(76,175,80,.25); border: 1px solid #4CAF50; color: #4CAF50; }
+    .net-status.hit   { background: rgba(255,107,107,.25); border: 1px solid #FF6B6B; color: #FF6B6B; }
+
     /* ── Chart ── */
     .chart-container {
       position: relative;
       width: 100%;
-      height: clamp(220px, 40vw, 400px);
+      height: clamp(220px, 40vw, 420px);
       background: rgba(26,71,42,.4);
       padding: 12px;
       border-radius: 12px;
@@ -229,54 +219,6 @@
     }
     .legend-line { width: 24px; height: 2px; border-radius: 1px; flex-shrink: 0; }
 
-    /* ── Court ── */
-    .court-info { font-size: .75rem; color: #b8d4c4; margin-bottom: .75rem; text-align: center; }
-    .court-container {
-      position: relative;
-      width: 100%;
-      padding-bottom: 40%;
-      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
-      border: 3px solid #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: crosshair;
-    }
-    .court-inner { position: absolute; inset: 0; }
-    .court-container::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 50%;
-      width: 2px; height: 100%;
-      background: #fff;
-      transform: translateX(-50%);
-      z-index: 2;
-    }
-    .net-line {
-      position: absolute;
-      width: 100%; height: 4px;
-      background: repeating-linear-gradient(90deg,#fff 0px,#fff 3px,transparent 3px,transparent 8px);
-      top: 50%; left: 0;
-      transform: translateY(-50%);
-      z-index: 5;
-      box-shadow: 0 2px 10px rgba(255,255,255,.8);
-    }
-    .service-line { position: absolute; width: 100%; height: 1px; background: rgba(255,255,255,.6); left: 0; z-index: 2; }
-    .service-line.near { top: 25%; }
-    .service-line.far  { top: 75%; }
-    .baseline { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,.8); left: 0; z-index: 2; }
-    .baseline.near { top: 0; }
-    .baseline.far  { bottom: 0; }
-    .launch-point, .landing-point {
-      position: absolute;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      z-index: 10;
-      transform: translate(-50%,-50%);
-    }
-    .launch-point  { background: #4CAF50; box-shadow: 0 0 15px rgba(76,175,80,.8); animation: pulse 1s ease-in-out infinite; }
-    .landing-point { background: #FF6B6B; box-shadow: 0 0 15px rgba(255,107,107,.8); }
-
     /* ── Table ── */
     .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 320px; }
@@ -292,8 +234,8 @@
       white-space: nowrap;
     }
     td { padding: 10px 14px; border-bottom: 1px solid rgba(76,175,80,.2); color: #d4e8df; font-weight: 500; }
-    tbody tr { transition: all .3s; }
-    tbody tr:hover { background: rgba(76,175,80,.15); transform: translateX(4px); }
+    tbody tr { transition: background .2s; }
+    tbody tr:hover { background: rgba(76,175,80,.15); }
     tbody tr.active { animation: rowHighlight .8s ease-in-out; }
 
     /* ── Footer ── */
@@ -323,8 +265,8 @@
       <div class="control-group">
         <label class="control-label">Initial Velocity (m/s)</label>
         <div class="slider-and-input">
-          <input type="range"  min="5"     max="100"  step="1"   value="50"   id="vel">
-          <input type="number" min="5"     max="100"  step="1"   value="50"   id="vel-input">
+          <input type="range"  min="0"     max="100"  step="1"   value="50"   id="vel">
+          <input type="number" min="0"     max="100"  step="1"   value="50"   id="vel-input">
         </div>
       </div>
       <div class="control-group">
@@ -337,8 +279,8 @@
       <div class="control-group">
         <label class="control-label">Initial Height (m)</label>
         <div class="slider-and-input">
-          <input type="range"  min="0.5"   max="5"    step="0.1" value="1.5"  id="ht">
-          <input type="number" min="0.5"   max="5"    step="0.1" value="1.5"  id="ht-input">
+          <input type="range"  min="0.5"   max="5"    step="0.1" value="1.0"  id="ht">
+          <input type="number" min="0.5"   max="5"    step="0.1" value="1.0"  id="ht-input">
         </div>
       </div>
       <div class="control-group">
@@ -388,35 +330,14 @@
     <div class="chart-container">
       <canvas id="trajChart"></canvas>
     </div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-line" style="background:#4CAF50;"></div>Ball path</div>
-      <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (11.89 m)</div>
-      <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Service box (6.4 m)</div>
-      <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baseline (23.77 m)</div>
-    </div>
-  </div>
-
-  <!-- Court -->
-  <div class="card">
-    <div class="section-title">🏟️ Interactive Tennis Court</div>
-    <div class="court-info">
-      ✨ <strong>Click</strong> anywhere on the court to set launch position &nbsp;•&nbsp; 🟢 Launch &nbsp;•&nbsp; 🔴 Landing
-    </div>
-    <div class="shot-type-buttons">
-      <button class="shot-btn active" data-shot="center">📍 Center</button>
-      <button class="shot-btn"        data-shot="crosscourt">↗️ Cross Court</button>
-      <button class="shot-btn"        data-shot="downline">↑ Down The Line</button>
-    </div>
-    <div class="court-container" id="courtContainer">
-      <div class="court-inner">
-        <div class="baseline near"></div>
-        <div class="service-line near"></div>
-        <div class="service-line far"></div>
-        <div class="baseline far"></div>
-        <div class="net-line"></div>
-        <div class="launch-point"  id="launchPoint"  style="left:25%;top:75%;"></div>
-        <div class="landing-point" id="landingPoint" style="display:none;"></div>
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:.75rem;">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-line" style="background:#4CAF50;"></div>Ball path</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (11.89 m, 0.91 m tall)</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Service box (6.4 m)</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baseline (23.77 m)</div>
       </div>
+      <div id="net-status" class="net-status clear">✅ Clears net</div>
     </div>
   </div>
 
@@ -428,9 +349,7 @@
         <thead>
           <tr><th>Step</th><th>Distance (m)</th><th>Height (m)</th><th>Time (s)</th></tr>
         </thead>
-        <tbody id="tbl">
-          <tr><td colspan="4" style="text-align:center;color:#888;">Click the court to start</td></tr>
-        </tbody>
+        <tbody id="tbl"></tbody>
       </table>
     </div>
   </div>
@@ -439,12 +358,14 @@
     <strong>Physics constants:</strong> drag = 0.507 (Babolat all-court) &nbsp;|&nbsp;
     mass = 0.056 kg &nbsp;|&nbsp; radius = 0.0327 m &nbsp;|&nbsp;
     lift coefficient = 0.25 &nbsp;|&nbsp; Euler integration dt = 0.0001 s
+    <br>
+    Net: 11.89 m from baseline, 0.91 m tall at center &nbsp;|&nbsp; Service box: 6.4 m &nbsp;|&nbsp; Baseline: 23.77 m
   </footer>
 
 </div>
 
 <script>
-  // ── Physics constants ──────────────────────────────────────────────────
+  // ── Physics constants (from Projectile.java) ──────────────────────────
   const GRAVITY         = -9.81;
   const AIR_DENSITY     = 1.225;
   const DRAG_COEFF      = 0.507;
@@ -456,39 +377,58 @@
   const DRAG_CONSTANT   = 0.5 * AIR_DENSITY * DRAG_COEFF  * AREA / BALL_MASS;
   const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF  * AREA / BALL_MASS;
 
-  let selectedShot = 'center';
-  let courtClickX  = null;
-  let chart        = null;
+  // ── Court dimensions ──────────────────────────────────────────────────
+  const NET_X      = 11.89;  // metres from baseline
+  const NET_HEIGHT = 0.91;   // metres tall at centre
+
+  let chart = null;
 
   function r2(n) { return Math.round(n * 100) / 100; }
 
-  // ── Simulation ─────────────────────────────────────────────────────────
+  // ── Full simulation — returns dense point array + net-clearance info ──
   function simulate(initVel, angleDeg, initHeight, omega) {
+    if (initVel === 0) return { pts: [{x:0,y:initHeight,t:0}], maxY: initHeight, totalTime: 0, netHeightAtX: initHeight, clearsNet: false };
+
     const angle = angleDeg * Math.PI / 180;
     let vx = initVel * Math.cos(angle);
     let vy = initVel * Math.sin(angle);
     let x = 0, y = initHeight, t = 0;
     const pts = [{ x, y, t }];
     let maxY = initHeight;
+    let netHeightAtX = null;   // ball's y when it crosses x = NET_X
+
     while (y >= 0 && t < 30) {
       const speed   = Math.sqrt(vx*vx + vy*vy);
       const dragX   = -DRAG_CONSTANT   * speed * vx;
       const dragY   = -DRAG_CONSTANT   * speed * vy;
       const magnusY = -MAGNUS_CONSTANT * omega * vx;
       const magnusX =  MAGNUS_CONSTANT * omega * vy;
+
+      const prevX = x;
       vx += (dragX + magnusX) * DT;
       vy += (GRAVITY + dragY + magnusY) * DT;
       x  += vx * DT;
       y  += vy * DT;
       t  += DT;
+
+      // Interpolate exact height at net position
+      if (netHeightAtX === null && prevX < NET_X && x >= NET_X) {
+        const frac = (NET_X - prevX) / (x - prevX);
+        netHeightAtX = y + (1 - frac) * (vy * DT); // approximate interpolation
+      }
+
       if (y > maxY) maxY = y;
       pts.push({ x, y, t });
     }
-    return { pts, maxY, totalTime: t };
+
+    const clearsNet = netHeightAtX !== null && netHeightAtX > NET_HEIGHT;
+    return { pts, maxY, totalTime: t, netHeightAtX, clearsNet };
   }
 
-  // ── Table rows ─────────────────────────────────────────────────────────
+  // ── Table rows (mirrors printTable logic from Projectile.java) ─────────
   function getTableRows(initVel, angleDeg, initHeight, omega, steps) {
+    if (initVel === 0) return [{ step: 0, x: 0, y: r2(initHeight), t: 0 }];
+
     const { totalTime } = simulate(initVel, angleDeg, initHeight, omega);
     const angle = angleDeg * Math.PI / 180;
     let vx = initVel * Math.cos(angle);
@@ -497,6 +437,7 @@
     let nextPrint = printInterval;
     let x = 0, y = initHeight, t = 0, step = 0;
     const rows = [{ step: 0, x: 0, y: r2(initHeight), t: 0 }];
+
     while (y >= 0 && step < steps && t < 30) {
       const speed   = Math.sqrt(vx*vx + vy*vy);
       const dragX   = -DRAG_CONSTANT   * speed * vx;
@@ -531,49 +472,100 @@
     requestAnimationFrame(tick);
   }
 
-  // ── Update ─────────────────────────────────────────────────────────────
+  // ── Main update ────────────────────────────────────────────────────────
   function update() {
     const initVel    = parseFloat(document.getElementById('vel').value);
-    let   angleDeg   = parseFloat(document.getElementById('ang').value);
+    const angleDeg   = parseFloat(document.getElementById('ang').value);
     const initHeight = parseFloat(document.getElementById('ht').value);
     const spinRPM    = parseFloat(document.getElementById('spin').value);
     const steps      = parseInt(document.getElementById('steps').value);
     const omega      = spinRPM * (2 * Math.PI / 60);
 
-    if (selectedShot === 'crosscourt') angleDeg += 3;
-    else if (selectedShot === 'downline') angleDeg -= 3;
+    const { pts, maxY, totalTime, netHeightAtX, clearsNet } = simulate(initVel, angleDeg, initHeight, omega);
+    const finalX = r2(pts[pts.length - 1].x);
 
-    const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
-    const finalX = pts[pts.length - 1].x;
-
-    animateValue(document.getElementById('s-range'),  r2(finalX));
+    // Stats
+    animateValue(document.getElementById('s-range'),  r2(pts[pts.length-1].x));
     animateValue(document.getElementById('s-height'), r2(maxY));
     animateValue(document.getElementById('s-time'),   r2(totalTime));
     document.getElementById('s-spin').textContent =
       spinRPM >  200 ? '🎾 Topspin' :
       spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
 
-    // Chart
-    const skip     = Math.max(1, Math.floor(pts.length / 300));
+    // Net status badge
+    const badge = document.getElementById('net-status');
+    if (netHeightAtX === null) {
+      badge.textContent = '⚠️ Doesn\'t reach net';
+      badge.className = 'net-status hit';
+    } else if (clearsNet) {
+      badge.textContent = `✅ Clears net by ${r2(netHeightAtX - NET_HEIGHT)} m`;
+      badge.className = 'net-status clear';
+    } else {
+      badge.textContent = `❌ Hits net (${r2(netHeightAtX)} m < ${NET_HEIGHT} m)`;
+      badge.className = 'net-status hit';
+    }
+
+    // Downsample for chart performance
+    const skip     = Math.max(1, Math.floor(pts.length / 400));
     const chartPts = pts.filter((_,i) => i % skip === 0).map(p => ({ x: r2(p.x), y: r2(p.y) }));
+
+    // Always show at least to the baseline or beyond the ball's range
+    const xMax = Math.max(finalX * 1.1, 25);
 
     if (chart) {
       chart.data.datasets = [
-        { data: chartPts,                                              showLine:true, borderColor:'#4CAF50', pointRadius:0, borderWidth:3, tension:.4, fill:false },
-        { data:[{x:11.89,y:0},{x:11.89,y:1.2}],                      showLine:true, borderColor:'#FF6B6B', pointRadius:0, borderWidth:2, borderDash:[5,5], fill:false },
-        { data:[{x:6.4,y:0},{x:6.4,y:.01}],                          showLine:true, borderColor:'#FFC107', pointRadius:0, borderWidth:2, borderDash:[4,4], fill:false },
-        { data:[{x:23.77,y:0},{x:23.77,y:.01}],                      showLine:true, borderColor:'#FF9800', pointRadius:0, borderWidth:2, borderDash:[4,4], fill:false }
+        // Ball trajectory
+        {
+          data: chartPts,
+          showLine: true,
+          borderColor: '#4CAF50',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 3,
+          tension: 0.4,
+          fill: false,
+          order: 1
+        },
+        // Net — full vertical line from ground to top
+        {
+          data: [{ x: NET_X, y: 0 }, { x: NET_X, y: NET_HEIGHT }],
+          showLine: true,
+          borderColor: '#FF6B6B',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 3,
+          borderDash: [],
+          fill: false,
+          order: 2
+        },
+        // Service box line
+        {
+          data: [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.5 }],
+          showLine: true,
+          borderColor: '#FFC107',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [4, 4],
+          fill: false,
+          order: 3
+        },
+        // Baseline
+        {
+          data: [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.5 }],
+          showLine: true,
+          borderColor: '#FF9800',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [4, 4],
+          fill: false,
+          order: 4
+        }
       ];
-      chart.options.scales.x.max = Math.max(finalX * 1.1, 15);
+      chart.options.scales.x.max = xMax;
       chart.update('none');
     }
-
-    // Court landing dot
-    const lp  = document.getElementById('landingPoint');
-    const pct = Math.min(finalX / 26, 1);
-    lp.style.display = 'block';
-    lp.style.left    = (pct * 100) + '%';
-    lp.style.top     = '25%';
 
     // Table
     const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
@@ -582,10 +574,10 @@
     ).join('');
   }
 
-  // ── Sync sliders ↔ number inputs ───────────────────────────────────────
+  // ── Sync slider ↔ number input ─────────────────────────────────────────
   function syncControls() {
     [
-      { s:'vel',   n:'vel-input',   min:5,     max:100  },
+      { s:'vel',   n:'vel-input',   min:0,     max:100  },
       { s:'ang',   n:'ang-input',   min:-5,    max:45   },
       { s:'ht',    n:'ht-input',    min:0.5,   max:5    },
       { s:'spin',  n:'spin-input',  min:-5000, max:5000 },
@@ -602,28 +594,6 @@
     });
   }
 
-  // ── Court click ────────────────────────────────────────────────────────
-  document.getElementById('courtContainer').addEventListener('click', e => {
-    const rect = document.getElementById('courtContainer').getBoundingClientRect();
-    const relX = (e.clientX - rect.left) / rect.width;
-    const relY = (e.clientY - rect.top)  / rect.height;
-    courtClickX = relX * 26;
-    const lp = document.getElementById('launchPoint');
-    lp.style.left = (relX * 100) + '%';
-    lp.style.top  = (relY * 100) + '%';
-    update();
-  });
-
-  // ── Shot buttons ───────────────────────────────────────────────────────
-  document.querySelectorAll('.shot-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedShot = btn.dataset.shot;
-      if (courtClickX !== null) update();
-    });
-  });
-
   // ── Init chart ─────────────────────────────────────────────────────────
   chart = new Chart(document.getElementById('trajChart'), {
     type: 'scatter',
@@ -634,16 +604,23 @@
       animation: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { title:{ display:true, text:'Distance (m)', color:'#FFC107', font:{size:12} }, grid:{ color:'rgba(255,255,255,.08)' }, ticks:{ color:'#a8c9b8' }, min:0 },
-        y: { title:{ display:true, text:'Height (m)',   color:'#FFC107', font:{size:12} }, grid:{ color:'rgba(255,255,255,.08)' }, ticks:{ color:'#a8c9b8' }, min:0 }
+        x: {
+          title: { display: true, text: 'Distance (m)', color: '#FFC107', font: { size: 12 } },
+          grid:  { color: 'rgba(255,255,255,.08)' },
+          ticks: { color: '#a8c9b8' },
+          min: 0
+        },
+        y: {
+          title: { display: true, text: 'Height (m)', color: '#FFC107', font: { size: 12 } },
+          grid:  { color: 'rgba(255,255,255,.08)' },
+          ticks: { color: '#a8c9b8' },
+          min: 0
+        }
       }
     }
   });
 
   syncControls();
-
-  // Run immediately with defaults
-  courtClickX = 6;
   update();
 </script>
 </body>
