@@ -3,1014 +3,648 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎾 Tennis Ball Trajectory Simulator</title>
+  <title>Tennis Ball Trajectory Simulator</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+      50%       { transform: scale(1.08); }
     }
-
     @keyframes glow {
-      0%, 100% { text-shadow: 0 0 0 rgba(76, 175, 80, 0); }
-      50% { text-shadow: 0 0 8px rgba(76, 175, 80, 0.8), 0 0 25px rgba(76, 175, 80, 0.5); }
+      0%, 100% { text-shadow: 0 0 0 rgba(76,175,80,0); }
+      50%       { text-shadow: 0 0 8px rgba(76,175,80,.8), 0 0 25px rgba(76,175,80,.5); }
     }
-
-    @keyframes ballSpin {
-      0% { transform: rotateZ(0deg); }
-      100% { transform: rotateZ(360deg); }
-    }
-
-    @keyframes rowHighlight {
-      0% { background: rgba(76, 175, 80, 0); }
-      50% { background: rgba(255, 193, 7, 0.3); }
-      100% { background: rgba(76, 175, 80, 0); }
-    }
-
     @keyframes titleGlow {
-      0%, 100% { text-shadow: 0 0 10px rgba(255, 193, 7, 0.3), 0 0 20px rgba(76, 175, 80, 0.2); }
-      50% { text-shadow: 0 0 20px rgba(255, 193, 7, 0.6), 0 0 40px rgba(76, 175, 80, 0.4); }
+      0%, 100% { text-shadow: 0 0 10px rgba(255,193,7,.3), 0 0 20px rgba(76,175,80,.2); }
+      50%       { text-shadow: 0 0 20px rgba(255,193,7,.6), 0 0 40px rgba(76,175,80,.4); }
+    }
+    @keyframes ballSpin {
+      from { transform: rotateZ(0deg); }
+      to   { transform: rotateZ(360deg); }
+    }
+    @keyframes rowHighlight {
+      0%   { background: rgba(76,175,80,0); }
+      50%  { background: rgba(255,193,7,.3); }
+      100% { background: rgba(76,175,80,0); }
     }
 
-    @keyframes fadeOutOverlay {
-      0% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
+    html { font-size: 16px; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
       color: #f0f0f0;
       min-height: 100vh;
-      padding: 2rem 1rem;
-      position: relative;
+      padding: 1.5rem 1rem;
     }
 
-    #introOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeOutOverlay 10s ease-out forwards;
-      pointer-events: none;
-    }
+    .container { max-width: 1100px; margin: 0 auto; width: 100%; }
 
-    #introOverlay.hidden {
-      display: none !important;
-    }
-
-    .intro-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .intro-text {
-      text-align: center;
-      opacity: 0;
-      animation: fadeIn 0.8s ease-out 1s forwards;
-    }
-
-    .intro-text h1 {
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: #4CAF50;
-      margin-bottom: 10px;
-      animation: glow 2s ease-in-out infinite 1s;
-    }
-
-    .intro-text p {
-      font-size: 1.3rem;
-      color: #FFC107;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      animation: fadeIn 0.8s ease-out;
-    }
-
+    /* ── Header ── */
+    header { text-align: center; margin-bottom: 2rem; animation: fadeIn .8s ease-out; }
     h1 {
-      font-size: 3rem;
+      font-size: clamp(1.6rem, 5vw, 3rem);
       font-weight: 900;
-      margin-bottom: 12px;
       color: #4CAF50;
       animation: titleGlow 4s ease-in-out infinite;
+      word-break: break-word;
     }
-
     .subtitle {
-      font-size: 1.1rem;
+      font-size: clamp(.8rem, 2.5vw, 1.1rem);
       color: #b8d4c4;
       font-weight: 300;
       letter-spacing: 1px;
+      margin-top: .5rem;
     }
+    .ball-emoji { display: inline-block; animation: ballSpin 6s linear infinite; }
 
-    .controls-section {
-      background: rgba(45, 90, 61, 0.6);
+    /* ── Card ── */
+    .card {
+      background: rgba(45,90,61,.6);
       border-radius: 18px;
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      animation: slideInLeft 0.7s ease-out;
+      border: 2px solid rgba(76,175,80,.4);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 12px 48px rgba(0,0,0,.4);
     }
-
     .section-title {
-      font-size: 14px;
+      font-size: .8rem;
       font-weight: 800;
       color: #FFC107;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 1.5rem;
+      letter-spacing: .15em;
+      margin-bottom: 1.25rem;
     }
 
+    /* ── Controls ── */
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
     }
-
-    .control-group {
-      animation: fadeIn 0.6s ease-out backwards;
-    }
-
-    .control-group:nth-child(1) { animation-delay: 0.1s; }
-    .control-group:nth-child(2) { animation-delay: 0.15s; }
-    .control-group:nth-child(3) { animation-delay: 0.2s; }
-    .control-group:nth-child(4) { animation-delay: 0.25s; }
-    .control-group:nth-child(5) { animation-delay: 0.3s; }
-
     .control-label {
       display: block;
-      font-size: 13px;
+      font-size: .75rem;
       font-weight: 700;
       color: #a8c9b8;
-      margin-bottom: 8px;
+      margin-bottom: .5rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: .1em;
     }
-
-    .control-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
     .slider-and-input {
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(76, 175, 80, 0.1);
-      padding: 10px 14px;
+      gap: 10px;
+      background: rgba(76,175,80,.1);
+      padding: 8px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(76, 175, 80, 0.2);
-      transition: all 0.3s ease;
+      border: 1px solid rgba(76,175,80,.2);
+      transition: border-color .3s;
     }
-
-    .slider-and-input:hover {
-      background: rgba(76, 175, 80, 0.15);
-      border-color: rgba(255, 193, 7, 0.4);
-    }
-
     .slider-and-input:focus-within {
-      background: rgba(76, 175, 80, 0.2);
-      border-color: rgba(255, 193, 7, 0.6);
-      box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+      border-color: rgba(255,193,7,.6);
+      box-shadow: 0 0 12px rgba(255,193,7,.2);
     }
-
     input[type="range"] {
       flex: 1;
+      min-width: 0;
       height: 6px;
       border-radius: 4px;
-      background: linear-gradient(90deg, rgba(76, 175, 80, 0.4), rgba(255, 193, 7, 0.4));
+      background: linear-gradient(90deg, rgba(76,175,80,.4), rgba(255,193,7,.4));
       outline: none;
       cursor: pointer;
       -webkit-appearance: none;
-      appearance: none;
     }
-
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
       border: 3px solid #fff;
       cursor: pointer;
-      box-shadow: 0 0 0 2px #4CAF50, 0 4px 12px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s ease;
+      box-shadow: 0 0 0 2px #4CAF50, 0 4px 12px rgba(0,0,0,.4);
     }
-
     input[type="range"]::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
       border: 3px solid #fff;
       cursor: pointer;
-      box-shadow: 0 0 0 2px #4CAF50, 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 0 2px #4CAF50;
     }
-
     input[type="number"] {
-      width: 100px;
-      padding: 8px 10px;
-      border: 1px solid rgba(76, 175, 80, 0.4);
+      width: 80px;
+      flex-shrink: 0;
+      padding: 6px 8px;
+      border: 1px solid rgba(76,175,80,.4);
       border-radius: 8px;
-      background: rgba(26, 71, 42, 0.5);
+      background: rgba(26,71,42,.5);
       color: #FFC107;
       font-weight: 700;
-      font-size: 14px;
+      font-size: .85rem;
       text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    input[type="number"]:focus {
-      outline: none;
-      border-color: rgba(255, 193, 7, 0.6);
-      background: rgba(76, 175, 80, 0.15);
-      box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
-    }
-
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input[type="number"] {
       -moz-appearance: textfield;
     }
-
-    .shot-type-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: rgba(255,193,7,.6);
+      box-shadow: 0 0 12px rgba(255,193,7,.25);
     }
 
+    /* ── Shot buttons ── */
+    .shot-type-buttons { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
     .shot-btn {
-      padding: 10px 16px;
-      background: rgba(76, 175, 80, 0.2);
-      border: 2px solid rgba(76, 175, 80, 0.4);
+      padding: 8px 14px;
+      background: rgba(76,175,80,.2);
+      border: 2px solid rgba(76,175,80,.4);
       border-radius: 8px;
       color: #a8c9b8;
       font-weight: 700;
-      font-size: 12px;
+      font-size: .7rem;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 1px;
-      transition: all 0.3s ease;
+      transition: all .3s;
+      white-space: nowrap;
     }
+    .shot-btn:hover  { border-color: rgba(255,193,7,.6); }
+    .shot-btn.active { background: rgba(76,175,80,.8); border-color: #FFC107; color: #fff; box-shadow: 0 0 15px rgba(76,175,80,.8); }
 
-    .shot-btn:hover {
-      background: rgba(76, 175, 80, 0.3);
-      border-color: rgba(255, 193, 7, 0.6);
-    }
-
-    .shot-btn.active {
-      background: rgba(76, 175, 80, 0.8);
-      border-color: #FFC107;
-      color: #fff;
-      box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
-    }
-
+    /* ── Stats ── */
     .stats-section {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: rgba(76, 175, 80, 0.15);
-      border-radius: 14px;
-      padding: 1.5rem;
-      border: 2px solid rgba(76, 175, 80, 0.3);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-      animation: slideUp 0.6s ease-out backwards;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:nth-child(1) { animation-delay: 0.3s; }
-    .stat-card:nth-child(2) { animation-delay: 0.35s; }
-    .stat-card:nth-child(3) { animation-delay: 0.4s; }
-    .stat-card:nth-child(4) { animation-delay: 0.45s; }
-
-    .stat-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 16px 48px rgba(76, 175, 80, 0.3);
-      border-color: rgba(255, 193, 7, 0.6);
-    }
-
-    .stat-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #a8c9b8;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 10px;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 900;
-      color: #4CAF50;
-      min-height: 40px;
-    }
-
-    .stat-unit {
-      font-size: 13px;
-      color: #FFC107;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .stat-value.updating {
-      animation: pulse 0.5s ease-out, glow 0.6s ease-in-out;
-    }
-
-    .chart-section {
-      background: rgba(45, 90, 61, 0.6);
-      border-radius: 18px;
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      animation: fadeIn 0.7s ease-out 0.2s backwards;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 400px;
-      background: rgba(26, 71, 42, 0.4);
-      padding: 15px;
-      border-radius: 12px;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1rem;
       margin-bottom: 1.5rem;
     }
-
-    .legend {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 1rem;
+    @media (max-width: 600px) {
+      .stats-section { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
+    .stat-card {
+      background: rgba(76,175,80,.15);
+      border-radius: 14px;
+      padding: 1rem;
+      border: 2px solid rgba(76,175,80,.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      transition: all .3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 16px 48px rgba(76,175,80,.3);
+      border-color: rgba(255,193,7,.6);
+    }
+    .stat-label { font-size: .7rem; font-weight: 700; color: #a8c9b8; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
+    .stat-value { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 900; color: #4CAF50; min-height: 2rem; word-break: break-all; }
+    .stat-unit  { font-size: .75rem; color: #FFC107; font-weight: 600; margin-top: 4px; }
 
+    /* ── Chart ── */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: clamp(220px, 40vw, 400px);
+      background: rgba(26,71,42,.4);
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: .75rem; }
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 13px;
+      gap: 6px;
+      font-size: .75rem;
       color: #a8c9b8;
-      padding: 6px 12px;
-      background: rgba(76, 175, 80, 0.1);
+      padding: 4px 10px;
+      background: rgba(76,175,80,.1);
       border-radius: 8px;
+      white-space: nowrap;
     }
+    .legend-line { width: 24px; height: 2px; border-radius: 1px; flex-shrink: 0; }
 
-    .legend-line {
-      width: 28px;
-      height: 2px;
-      border-radius: 1px;
-    }
-
-    .court-section {
-      background: rgba(45, 90, 61, 0.6);
-      border-radius: 18px;
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      animation: slideUp 0.7s ease-out 0.2s backwards;
-    }
-
-    .court-info {
-      font-size: 12px;
-      color: #b8d4c4;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
+    /* ── Court ── */
+    .court-info { font-size: .75rem; color: #b8d4c4; margin-bottom: .75rem; text-align: center; }
     .court-container {
       position: relative;
       width: 100%;
-      height: 400px;
+      padding-bottom: 40%;
       background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
       border: 3px solid #fff;
       border-radius: 12px;
-      margin-top: 1rem;
       overflow: hidden;
       cursor: crosshair;
     }
-
+    .court-inner { position: absolute; inset: 0; }
     .court-container::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 100%;
+      top: 0; left: 50%;
+      width: 2px; height: 100%;
       background: #fff;
       transform: translateX(-50%);
       z-index: 2;
     }
-
     .net-line {
       position: absolute;
-      width: 100%;
-      height: 4px;
-      background: repeating-linear-gradient(90deg, #fff 0px, #fff 3px, transparent 3px, transparent 8px);
-      top: 50%;
-      left: 0;
+      width: 100%; height: 4px;
+      background: repeating-linear-gradient(90deg,#fff 0px,#fff 3px,transparent 3px,transparent 8px);
+      top: 50%; left: 0;
       transform: translateY(-50%);
       z-index: 5;
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 10px rgba(255,255,255,.8);
     }
-
-    .service-line {
-      position: absolute;
-      width: 100%;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.6);
-      left: 0;
-      z-index: 2;
-    }
-
+    .service-line { position: absolute; width: 100%; height: 1px; background: rgba(255,255,255,.6); left: 0; z-index: 2; }
     .service-line.near { top: 25%; }
-    .service-line.far { top: 75%; }
-
-    .baseline {
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.8);
-      left: 0;
-      z-index: 2;
-    }
-
+    .service-line.far  { top: 75%; }
+    .baseline { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,.8); left: 0; z-index: 2; }
     .baseline.near { top: 0; }
-    .baseline.far { top: 100%; transform: translateY(-100%); }
-
-    .launch-point {
+    .baseline.far  { bottom: 0; }
+    .launch-point, .landing-point {
       position: absolute;
-      width: 16px;
-      height: 16px;
-      background: #4CAF50;
-      border: 3px solid #fff;
+      width: 14px; height: 14px;
       border-radius: 50%;
-      box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+      border: 3px solid #fff;
       z-index: 10;
-      animation: pulse 1s ease-in-out infinite;
+      transform: translate(-50%,-50%);
     }
+    .launch-point  { background: #4CAF50; box-shadow: 0 0 15px rgba(76,175,80,.8); animation: pulse 1s ease-in-out infinite; }
+    .landing-point { background: #FF6B6B; box-shadow: 0 0 15px rgba(255,107,107,.8); }
 
-    .landing-point {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      background: #FF6B6B;
-      border: 3px solid #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-      z-index: 9;
-    }
-
-    .table-section {
-      background: rgba(45, 90, 61, 0.6);
-      border-radius: 18px;
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      padding: 2rem;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      animation: slideUp 0.7s ease-out 0.3s backwards;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
+    /* ── Table ── */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 320px; }
     th {
       text-align: left;
-      padding: 14px 16px;
+      padding: 12px 14px;
       color: #FFC107;
-      border-bottom: 2px solid rgba(76, 175, 80, 0.5);
+      border-bottom: 2px solid rgba(76,175,80,.5);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      background: rgba(76, 175, 80, 0.1);
+      letter-spacing: .1em;
+      background: rgba(76,175,80,.1);
+      white-space: nowrap;
     }
+    td { padding: 10px 14px; border-bottom: 1px solid rgba(76,175,80,.2); color: #d4e8df; font-weight: 500; }
+    tbody tr { transition: all .3s; }
+    tbody tr:hover { background: rgba(76,175,80,.15); transform: translateX(4px); }
+    tbody tr.active { animation: rowHighlight .8s ease-in-out; }
 
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(76, 175, 80, 0.2);
-      color: #d4e8df;
-      font-weight: 500;
-    }
-
-    tbody tr {
-      animation: fadeIn 0.4s ease-out backwards;
-      transition: all 0.3s ease;
-    }
-
-    tbody tr:nth-child(1) { animation-delay: 0.4s; }
-    tbody tr:nth-child(2) { animation-delay: 0.45s; }
-    tbody tr:nth-child(3) { animation-delay: 0.5s; }
-    tbody tr:nth-child(4) { animation-delay: 0.55s; }
-    tbody tr:nth-child(5) { animation-delay: 0.6s; }
-    tbody tr:nth-child(n+6) { animation-delay: 0.65s; }
-
-    tbody tr:hover {
-      background: rgba(76, 175, 80, 0.15);
-      transform: translateX(6px);
-    }
-
-    tbody tr.active {
-      animation: rowHighlight 0.8s ease-in-out;
-    }
-
+    /* ── Footer ── */
     footer {
-      margin-top: 3rem;
+      margin-top: 2rem;
       text-align: center;
-      font-size: 12px;
+      font-size: .75rem;
       color: #8ab5a0;
-      padding: 1.5rem;
-      border-top: 1px solid rgba(76, 175, 80, 0.2);
+      padding: 1rem;
+      border-top: 1px solid rgba(76,175,80,.2);
       line-height: 1.8;
-    }
-
-    .ball-emoji {
-      display: inline-block;
-      animation: ballSpin 6s linear infinite;
-    }
-
-    @media (max-width: 768px) {
-      h1 { font-size: 2.2rem; }
-      .controls-grid { grid-template-columns: 1fr; }
-      .stats-section { grid-template-columns: repeat(2, 1fr); }
-      .chart-container { height: 300px; }
-      .court-container { height: 300px; }
     }
   </style>
 </head>
 <body>
+<div class="container">
 
-  <div id="introOverlay">
-    <div class="intro-container">
-      <div class="intro-text">
-        <h1><span class="ball-emoji">🎾</span> TENNIS PHYSICS</h1>
-        <p>Click court to hit from that spot</p>
+  <header>
+    <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
+    <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
+  </header>
+
+  <!-- Controls -->
+  <div class="card">
+    <div class="section-title">⚙️ Input Parameters</div>
+    <div class="controls-grid">
+      <div class="control-group">
+        <label class="control-label">Initial Velocity (m/s)</label>
+        <div class="slider-and-input">
+          <input type="range"  min="5"     max="100"  step="1"   value="50"   id="vel">
+          <input type="number" min="5"     max="100"  step="1"   value="50"   id="vel-input">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Launch Angle (°)</label>
+        <div class="slider-and-input">
+          <input type="range"  min="-5"    max="45"   step="1"   value="12"   id="ang">
+          <input type="number" min="-5"    max="45"   step="1"   value="12"   id="ang-input">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Initial Height (m)</label>
+        <div class="slider-and-input">
+          <input type="range"  min="0.5"   max="5"    step="0.1" value="1.5"  id="ht">
+          <input type="number" min="0.5"   max="5"    step="0.1" value="1.5"  id="ht-input">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Spin (RPM)</label>
+        <div class="slider-and-input">
+          <input type="range"  min="-5000" max="5000" step="100" value="2500" id="spin">
+          <input type="number" min="-5000" max="5000" step="100" value="2500" id="spin-input">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Table Steps</label>
+        <div class="slider-and-input">
+          <input type="range"  min="3"     max="20"   step="1"   value="5"    id="steps">
+          <input type="number" min="3"     max="20"   step="1"   value="5"    id="steps-input">
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="container" id="mainApp">
-    <header>
-      <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
-      <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
-    </header>
-
-    <div class="controls-section">
-      <div class="section-title">⚙️ Input Parameters</div>
-      <div class="controls-grid">
-        <div class="control-group">
-          <label class="control-label">Initial Velocity (m/s)</label>
-          <div class="control-wrapper">
-            <div class="slider-and-input">
-              <input type="range" min="5" max="100" step="1" value="50" id="vel" />
-              <input type="number" min="5" max="100" step="1" value="50" id="vel-input" />
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Launch Angle (°)</label>
-          <div class="control-wrapper">
-            <div class="slider-and-input">
-              <input type="range" min="-5" max="45" step="1" value="12" id="ang" />
-              <input type="number" min="-5" max="45" step="1" value="12" id="ang-input" />
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Initial Height (m)</label>
-          <div class="control-wrapper">
-            <div class="slider-and-input">
-              <input type="range" min="0.5" max="5" step="0.1" value="1.5" id="ht" />
-              <input type="number" min="0.5" max="5" step="0.1" value="1.5" id="ht-input" />
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Spin (RPM)</label>
-          <div class="control-wrapper">
-            <div class="slider-and-input">
-              <input type="range" min="-5000" max="5000" step="100" value="2500" id="spin" />
-              <input type="number" min="-5000" max="5000" step="100" value="2500" id="spin-input" />
-            </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Table Steps</label>
-          <div class="control-wrapper">
-            <div class="slider-and-input">
-              <input type="range" min="3" max="20" step="1" value="5" id="steps" />
-              <input type="number" min="3" max="20" step="1" value="5" id="steps-input" />
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Stats -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-label">📏 Range</div>
+      <div class="stat-value" id="s-range">—</div>
+      <div class="stat-unit">meters</div>
     </div>
-
-    <div class="stats-section">
-      <div class="stat-card">
-        <div class="stat-label">📏 Range</div>
-        <div class="stat-value" id="s-range">—</div>
-        <div class="stat-unit">meters</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">📈 Max Height</div>
-        <div class="stat-value" id="s-height">—</div>
-        <div class="stat-unit">meters</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">⏱️ Flight Time</div>
-        <div class="stat-value" id="s-time">—</div>
-        <div class="stat-unit">seconds</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">🌀 Spin Type</div>
-        <div class="stat-value" id="s-spin">—</div>
-        <div class="stat-unit">&nbsp;</div>
-      </div>
+    <div class="stat-card">
+      <div class="stat-label">📈 Max Height</div>
+      <div class="stat-value" id="s-height">—</div>
+      <div class="stat-unit">meters</div>
     </div>
-
-    <div class="chart-section">
-      <div class="section-title">📊 Trajectory Visualization</div>
-      <div class="chart-container">
-        <canvas id="trajChart"></canvas>
-      </div>
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-line" style="background:#4CAF50;"></div>
-          <span>Ball path</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-line" style="background:#FF6B6B; border-top: 2px dashed #FF6B6B; height:0;"></div>
-          <span>Net (11.89m)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-line" style="background:#FFC107;"></div>
-          <span>Service box (6.4m)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-line" style="background:#FF9800;"></div>
-          <span>Baseline (23.77m)</span>
-        </div>
-      </div>
+    <div class="stat-card">
+      <div class="stat-label">⏱️ Flight Time</div>
+      <div class="stat-value" id="s-time">—</div>
+      <div class="stat-unit">seconds</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">🌀 Spin Type</div>
+      <div class="stat-value" id="s-spin">—</div>
+      <div class="stat-unit">&nbsp;</div>
+    </div>
+  </div>
 
-    <div class="court-section">
-      <div class="section-title">🏟️ Interactive Tennis Court</div>
-      
-      <div class="court-info">
-        ✨ <strong>Click</strong> anywhere on the court to choose where you hit from • Green = launch point • Red = landing point
-      </div>
+  <!-- Chart -->
+  <div class="card">
+    <div class="section-title">📊 Trajectory Visualization</div>
+    <div class="chart-container">
+      <canvas id="trajChart"></canvas>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-line" style="background:#4CAF50;"></div>Ball path</div>
+      <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (11.89 m)</div>
+      <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Service box (6.4 m)</div>
+      <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baseline (23.77 m)</div>
+    </div>
+  </div>
 
-      <div class="shot-type-buttons">
-        <button class="shot-btn active" data-shot="center">📍 Center</button>
-        <button class="shot-btn" data-shot="crosscourt">↗️ Cross Court</button>
-        <button class="shot-btn" data-shot="downline">↑ Down The Line</button>
-      </div>
-
-      <div class="court-container" id="courtContainer">
+  <!-- Court -->
+  <div class="card">
+    <div class="section-title">🏟️ Interactive Tennis Court</div>
+    <div class="court-info">
+      ✨ <strong>Click</strong> anywhere on the court to set launch position &nbsp;•&nbsp; 🟢 Launch &nbsp;•&nbsp; 🔴 Landing
+    </div>
+    <div class="shot-type-buttons">
+      <button class="shot-btn active" data-shot="center">📍 Center</button>
+      <button class="shot-btn"        data-shot="crosscourt">↗️ Cross Court</button>
+      <button class="shot-btn"        data-shot="downline">↑ Down The Line</button>
+    </div>
+    <div class="court-container" id="courtContainer">
+      <div class="court-inner">
         <div class="baseline near"></div>
         <div class="service-line near"></div>
         <div class="service-line far"></div>
         <div class="baseline far"></div>
         <div class="net-line"></div>
-        
-        <div class="launch-point" id="launchPoint"></div>
-        <div class="landing-point" id="landingPoint"></div>
+        <div class="launch-point"  id="launchPoint"  style="left:25%;top:75%;"></div>
+        <div class="landing-point" id="landingPoint" style="display:none;"></div>
       </div>
     </div>
+  </div>
 
-    <div class="table-section">
-      <div class="section-title">📋 Step-by-Step Trajectory Data</div>
+  <!-- Table -->
+  <div class="card">
+    <div class="section-title">📋 Step-by-Step Trajectory Data</div>
+    <div class="table-scroll">
       <table>
         <thead>
-          <tr>
-            <th>Step</th>
-            <th>Distance (m)</th>
-            <th>Height (m)</th>
-            <th>Time (s)</th>
-          </tr>
+          <tr><th>Step</th><th>Distance (m)</th><th>Height (m)</th><th>Time (s)</th></tr>
         </thead>
         <tbody id="tbl">
-          <tr>
-            <td colspan="4" style="text-align: center; color: #888;">Click court to start</td>
-          </tr>
+          <tr><td colspan="4" style="text-align:center;color:#888;">Click the court to start</td></tr>
         </tbody>
       </table>
     </div>
-
-    <footer>
-      <strong>Physics:</strong> Drag = 0.507 | Mass = 0.056kg | Radius = 0.0327m
-    </footer>
   </div>
 
-  <script>
-    function generateParticles() {
-      const styles = document.createElement('style');
-      styles.innerHTML = `@keyframes floatParticle {
-        0% { transform: translateY(0) translateX(0); opacity: 0; }
-        10% { opacity: 0.8; }
-        90% { opacity: 0.8; }
-        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-      }`;
-      document.head.appendChild(styles);
+  <footer>
+    <strong>Physics constants:</strong> drag = 0.507 (Babolat all-court) &nbsp;|&nbsp;
+    mass = 0.056 kg &nbsp;|&nbsp; radius = 0.0327 m &nbsp;|&nbsp;
+    lift coefficient = 0.25 &nbsp;|&nbsp; Euler integration dt = 0.0001 s
+  </footer>
+
+</div>
+
+<script>
+  // ── Physics constants ──────────────────────────────────────────────────
+  const GRAVITY         = -9.81;
+  const AIR_DENSITY     = 1.225;
+  const DRAG_COEFF      = 0.507;
+  const BALL_MASS       = 0.056;
+  const BALL_RADIUS     = 0.0327;
+  const LIFT_COEFF      = 0.25;
+  const DT              = 0.0001;
+  const AREA            = Math.PI * BALL_RADIUS * BALL_RADIUS;
+  const DRAG_CONSTANT   = 0.5 * AIR_DENSITY * DRAG_COEFF  * AREA / BALL_MASS;
+  const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF  * AREA / BALL_MASS;
+
+  let selectedShot = 'center';
+  let courtClickX  = null;
+  let chart        = null;
+
+  function r2(n) { return Math.round(n * 100) / 100; }
+
+  // ── Simulation ─────────────────────────────────────────────────────────
+  function simulate(initVel, angleDeg, initHeight, omega) {
+    const angle = angleDeg * Math.PI / 180;
+    let vx = initVel * Math.cos(angle);
+    let vy = initVel * Math.sin(angle);
+    let x = 0, y = initHeight, t = 0;
+    const pts = [{ x, y, t }];
+    let maxY = initHeight;
+    while (y >= 0 && t < 30) {
+      const speed   = Math.sqrt(vx*vx + vy*vy);
+      const dragX   = -DRAG_CONSTANT   * speed * vx;
+      const dragY   = -DRAG_CONSTANT   * speed * vy;
+      const magnusY = -MAGNUS_CONSTANT * omega * vx;
+      const magnusX =  MAGNUS_CONSTANT * omega * vy;
+      vx += (dragX + magnusX) * DT;
+      vy += (GRAVITY + dragY + magnusY) * DT;
+      x  += vx * DT;
+      y  += vy * DT;
+      t  += DT;
+      if (y > maxY) maxY = y;
+      pts.push({ x, y, t });
     }
+    return { pts, maxY, totalTime: t };
+  }
 
-    generateParticles();
-    setTimeout(() => {
-      document.getElementById('introOverlay').classList.add('hidden');
-    }, 5000);
-
-    const GRAVITY = -9.81;
-    const AIR_DENSITY = 1.225;
-    const DRAG_COEFF = 0.507;
-    const BALL_MASS = 0.056;
-    const BALL_RADIUS = 0.0327;
-    const LIFT_COEFF = 0.25;
-    const DT = 0.0001;
-
-    const AREA = Math.PI * BALL_RADIUS * BALL_RADIUS;
-    const DRAG_CONSTANT = 0.5 * AIR_DENSITY * DRAG_COEFF * AREA / BALL_MASS;
-    const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF * AREA / BALL_MASS;
-
-    let selectedShot = 'center';
-    let courtClickX = null;
-    let courtClickY = null;
-
-    function round2(n) {
-      return Math.round(n * 100) / 100;
-    }
-
-    function simulate(initVel, angleDeg, initHeight, omega) {
-      const angle = (angleDeg * Math.PI) / 180;
-      let vx = initVel * Math.cos(angle);
-      let vy = initVel * Math.sin(angle);
-      let x = 0;
-      let y = initHeight;
-      let t = 0;
-      const pts = [{ x, y, t }];
-      let maxY = initHeight;
-
-      while (y >= 0 && t < 30) {
-        const speed = Math.sqrt(vx * vx + vy * vy);
-        const dragX = -DRAG_CONSTANT * speed * vx;
-        const dragY = -DRAG_CONSTANT * speed * vy;
-        const magnusY = -MAGNUS_CONSTANT * omega * vx;
-        const magnusX = MAGNUS_CONSTANT * omega * vy;
-
-        vx += (dragX + magnusX) * DT;
-        vy += (GRAVITY + dragY + magnusY) * DT;
-        x += vx * DT;
-        y += vy * DT;
-        t += DT;
-
-        if (y > maxY) maxY = y;
-        pts.push({ x, y, t });
-      }
-
-      return { pts, maxY, totalTime: t };
-    }
-
-    function getTableRows(initVel, angleDeg, initHeight, omega, steps) {
-      const { totalTime } = simulate(initVel, angleDeg, initHeight, omega);
-      const angle = (angleDeg * Math.PI) / 180;
-      let vx = initVel * Math.cos(angle);
-      let vy = initVel * Math.sin(angle);
-      const printInterval = totalTime / steps;
-      let nextPrint = printInterval;
-      let x = 0, y = initHeight, t = 0, step = 0;
-      const rows = [{ step: 0, x: 0, y: initHeight, t: 0 }];
-
-      while (y >= 0 && step < steps && t < 30) {
-        const speed = Math.sqrt(vx * vx + vy * vy);
-        const dragX = -DRAG_CONSTANT * speed * vx;
-        const dragY = -DRAG_CONSTANT * speed * vy;
-        const magnusY = -MAGNUS_CONSTANT * omega * vx;
-        const magnusX = MAGNUS_CONSTANT * omega * vy;
-
-        vx += (dragX + magnusX) * DT;
-        vy += (GRAVITY + dragY + magnusY) * DT;
-        x += vx * DT;
-        y += vy * DT;
-        t += DT;
-
-        if (t >= nextPrint - DT / 2) {
-          step++;
-          rows.push({ step, x: round2(x), y: round2(y), t: round2(t) });
-          nextPrint += printInterval;
-        }
-      }
-      return rows;
-    }
-
-    let chart = null;
-
-    function initChart() {
-      const ctx = document.getElementById('trajChart');
-      if (!ctx) return;
-      chart = new Chart(ctx, {
-        type: 'scatter',
-        data: { datasets: [] },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 600 },
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { title: { display: true, text: 'Distance (m)', color: '#FFC107' }, min: 0 },
-            y: { title: { display: true, text: 'Height (m)', color: '#FFC107' }, min: 0 }
-          }
-        }
-      });
-    }
-
-    function animateValue(element, newValue, duration = 400) {
-      const isString = typeof newValue === 'string' || isNaN(newValue);
-      if (isString) {
-        element.textContent = newValue;
-        return;
-      }
-      const oldValue = parseFloat(element.textContent) || 0;
-      const diff = newValue - oldValue;
-      const startTime = Date.now();
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        element.textContent = round2(oldValue + diff * progress);
-        if (progress < 1) requestAnimationFrame(animate);
-      };
-      requestAnimationFrame(animate);
-    }
-
-    function update() {
-      if (courtClickX === null) return;
-
-      const initVel = parseFloat(document.getElementById('vel').value);
-      let angleDeg = parseFloat(document.getElementById('ang').value);
-      const initHeight = parseFloat(document.getElementById('ht').value);
-      const spinRPM = parseFloat(document.getElementById('spin').value);
-      const steps = parseInt(document.getElementById('steps').value);
-      const omega = spinRPM * (2 * Math.PI / 60);
-
-      // Minimal angle adjustments for shot types
-      if (selectedShot === 'crosscourt') angleDeg += 3;
-      else if (selectedShot === 'downline') angleDeg -= 3;
-
-      const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
-      const finalX = pts[pts.length - 1].x;
-
-      animateValue(document.getElementById('s-range'), finalX);
-      animateValue(document.getElementById('s-height'), maxY);
-      animateValue(document.getElementById('s-time'), totalTime);
-
-      const spinType = spinRPM > 200 ? '🎾 Topspin' : spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
-      animateValue(document.getElementById('s-spin'), spinType);
-
-      const skip = Math.max(1, Math.floor(pts.length / 300));
-      const chartPts = pts.filter((_, i) => i % skip === 0).map(p => ({ x: round2(p.x), y: round2(p.y) }));
-
-      if (chart) {
-        chart.data.datasets = [
-          { label: 'Ball', data: chartPts, showLine: true, borderColor: '#4CAF50', pointRadius: 0, borderWidth: 3, tension: 0.4, fill: false },
-          { label: 'Net', data: [{ x: 11.89, y: 0 }, { x: 11.89, y: 1.2 }], showLine: true, borderColor: '#FF6B6B', pointRadius: 0, borderWidth: 2, borderDash: [5, 5], fill: false },
-          { label: 'Service', data: [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.01 }], showLine: true, borderColor: '#FFC107', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false },
-          { label: 'Baseline', data: [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.01 }], showLine: true, borderColor: '#FF9800', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false }
-        ];
-        chart.options.scales.x.max = Math.max(finalX * 1.1, 15);
-        chart.update();
-      }
-
-      // Update court landing point
-      const courtContainer = document.getElementById('courtContainer');
-      const courtWidth = courtContainer.offsetWidth;
-      const courtHeight = courtContainer.offsetHeight;
-      const landingPointPercent = Math.min((finalX / 26) * 100, 100);
-      
-      document.getElementById('landingPoint').style.left = (landingPointPercent / 100 * courtWidth) + 'px';
-      document.getElementById('landingPoint').style.top = '50px'; // Near top (opponent side)
-
-      // Update table
-      const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
-      const tbl = document.getElementById('tbl');
-      if (tbl) {
-        tbl.innerHTML = rows.map((row, idx) => `<tr${idx === 0 ? ' class="active"' : ''}><td>${row.step}</td><td>${row.x}</td><td>${row.y}</td><td>${row.t}</td></tr>`).join('');
+  // ── Table rows ─────────────────────────────────────────────────────────
+  function getTableRows(initVel, angleDeg, initHeight, omega, steps) {
+    const { totalTime } = simulate(initVel, angleDeg, initHeight, omega);
+    const angle = angleDeg * Math.PI / 180;
+    let vx = initVel * Math.cos(angle);
+    let vy = initVel * Math.sin(angle);
+    const printInterval = totalTime / steps;
+    let nextPrint = printInterval;
+    let x = 0, y = initHeight, t = 0, step = 0;
+    const rows = [{ step: 0, x: 0, y: r2(initHeight), t: 0 }];
+    while (y >= 0 && step < steps && t < 30) {
+      const speed   = Math.sqrt(vx*vx + vy*vy);
+      const dragX   = -DRAG_CONSTANT   * speed * vx;
+      const dragY   = -DRAG_CONSTANT   * speed * vy;
+      const magnusY = -MAGNUS_CONSTANT * omega * vx;
+      const magnusX =  MAGNUS_CONSTANT * omega * vy;
+      vx += (dragX + magnusX) * DT;
+      vy += (GRAVITY + dragY + magnusY) * DT;
+      x  += vx * DT;
+      y  += vy * DT;
+      t  += DT;
+      if (t >= nextPrint - DT / 2) {
+        step++;
+        rows.push({ step, x: r2(x), y: r2(y), t: r2(t) });
+        nextPrint += printInterval;
       }
     }
+    return rows;
+  }
 
-    function syncControls() {
-      const controls = [
-        { slider: 'vel', input: 'vel-input', min: 5, max: 100 },
-        { slider: 'ang', input: 'ang-input', min: -5, max: 45 },
-        { slider: 'ht', input: 'ht-input', min: 0.5, max: 5 },
-        { slider: 'spin', input: 'spin-input', min: -5000, max: 5000 },
-        { slider: 'steps', input: 'steps-input', min: 3, max: 20 }
+  // ── Animated counter ───────────────────────────────────────────────────
+  function animateValue(el, newVal, duration = 350) {
+    if (typeof newVal === 'string' || isNaN(newVal)) { el.textContent = newVal; return; }
+    const oldVal = parseFloat(el.textContent) || 0;
+    const diff   = newVal - oldVal;
+    const start  = Date.now();
+    const tick   = () => {
+      const p = Math.min((Date.now() - start) / duration, 1);
+      el.textContent = r2(oldVal + diff * p);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // ── Update ─────────────────────────────────────────────────────────────
+  function update() {
+    const initVel    = parseFloat(document.getElementById('vel').value);
+    let   angleDeg   = parseFloat(document.getElementById('ang').value);
+    const initHeight = parseFloat(document.getElementById('ht').value);
+    const spinRPM    = parseFloat(document.getElementById('spin').value);
+    const steps      = parseInt(document.getElementById('steps').value);
+    const omega      = spinRPM * (2 * Math.PI / 60);
+
+    if (selectedShot === 'crosscourt') angleDeg += 3;
+    else if (selectedShot === 'downline') angleDeg -= 3;
+
+    const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
+    const finalX = pts[pts.length - 1].x;
+
+    animateValue(document.getElementById('s-range'),  r2(finalX));
+    animateValue(document.getElementById('s-height'), r2(maxY));
+    animateValue(document.getElementById('s-time'),   r2(totalTime));
+    document.getElementById('s-spin').textContent =
+      spinRPM >  200 ? '🎾 Topspin' :
+      spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
+
+    // Chart
+    const skip     = Math.max(1, Math.floor(pts.length / 300));
+    const chartPts = pts.filter((_,i) => i % skip === 0).map(p => ({ x: r2(p.x), y: r2(p.y) }));
+
+    if (chart) {
+      chart.data.datasets = [
+        { data: chartPts,                                              showLine:true, borderColor:'#4CAF50', pointRadius:0, borderWidth:3, tension:.4, fill:false },
+        { data:[{x:11.89,y:0},{x:11.89,y:1.2}],                      showLine:true, borderColor:'#FF6B6B', pointRadius:0, borderWidth:2, borderDash:[5,5], fill:false },
+        { data:[{x:6.4,y:0},{x:6.4,y:.01}],                          showLine:true, borderColor:'#FFC107', pointRadius:0, borderWidth:2, borderDash:[4,4], fill:false },
+        { data:[{x:23.77,y:0},{x:23.77,y:.01}],                      showLine:true, borderColor:'#FF9800', pointRadius:0, borderWidth:2, borderDash:[4,4], fill:false }
       ];
-
-      controls.forEach(ctrl => {
-        const sliderElem = document.getElementById(ctrl.slider);
-        const inputElem = document.getElementById(ctrl.input);
-        if (!sliderElem || !inputElem) return;
-
-        sliderElem.addEventListener('input', (e) => {
-          inputElem.value = parseFloat(e.target.value);
-          update();
-        });
-
-        inputElem.addEventListener('input', (e) => {
-          let value = parseFloat(e.target.value);
-          value = Math.max(ctrl.min, Math.min(ctrl.max, value));
-          sliderElem.value = value;
-          inputElem.value = value;
-          update();
-        });
-      });
+      chart.options.scales.x.max = Math.max(finalX * 1.1, 15);
+      chart.update('none');
     }
 
-    // Court click handler
-    document.getElementById('courtContainer').addEventListener('click', (e) => {
-      const rect = document.getElementById('courtContainer').getBoundingClientRect();
-      courtClickX = (e.clientX - rect.left) / rect.width * 26; // 26m court length
-      courtClickY = (e.clientY - rect.top) / rect.height;
+    // Court landing dot
+    const lp  = document.getElementById('landingPoint');
+    const pct = Math.min(finalX / 26, 1);
+    lp.style.display = 'block';
+    lp.style.left    = (pct * 100) + '%';
+    lp.style.top     = '25%';
 
-      const launchPoint = document.getElementById('launchPoint');
-      launchPoint.style.left = (e.clientX - rect.left) + 'px';
-      launchPoint.style.top = (e.clientY - rect.top) + 'px';
-      launchPoint.style.transform = 'translate(-50%, -50%)';
+    // Table
+    const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
+    document.getElementById('tbl').innerHTML = rows.map((r, i) =>
+      `<tr${i===0?' class="active"':''}><td>${r.step}</td><td>${r.x}</td><td>${r.y}</td><td>${r.t}</td></tr>`
+    ).join('');
+  }
 
-      update();
-    });
-
-    // Shot type buttons
-    document.querySelectorAll('.shot-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedShot = btn.dataset.shot;
-        update();
+  // ── Sync sliders ↔ number inputs ───────────────────────────────────────
+  function syncControls() {
+    [
+      { s:'vel',   n:'vel-input',   min:5,     max:100  },
+      { s:'ang',   n:'ang-input',   min:-5,    max:45   },
+      { s:'ht',    n:'ht-input',    min:0.5,   max:5    },
+      { s:'spin',  n:'spin-input',  min:-5000, max:5000 },
+      { s:'steps', n:'steps-input', min:3,     max:20   }
+    ].forEach(({ s, n, min, max }) => {
+      const sl = document.getElementById(s);
+      const nu = document.getElementById(n);
+      sl.addEventListener('input', () => { nu.value = sl.value; update(); });
+      nu.addEventListener('input', () => {
+        let v = parseFloat(nu.value);
+        v = Math.max(min, Math.min(max, isNaN(v) ? min : v));
+        sl.value = v; nu.value = v; update();
       });
     });
+  }
 
-    initChart();
-    syncControls();
-  </script>
+  // ── Court click ────────────────────────────────────────────────────────
+  document.getElementById('courtContainer').addEventListener('click', e => {
+    const rect = document.getElementById('courtContainer').getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;
+    const relY = (e.clientY - rect.top)  / rect.height;
+    courtClickX = relX * 26;
+    const lp = document.getElementById('launchPoint');
+    lp.style.left = (relX * 100) + '%';
+    lp.style.top  = (relY * 100) + '%';
+    update();
+  });
 
+  // ── Shot buttons ───────────────────────────────────────────────────────
+  document.querySelectorAll('.shot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedShot = btn.dataset.shot;
+      if (courtClickX !== null) update();
+    });
+  });
+
+  // ── Init chart ─────────────────────────────────────────────────────────
+  chart = new Chart(document.getElementById('trajChart'), {
+    type: 'scatter',
+    data: { datasets: [] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { title:{ display:true, text:'Distance (m)', color:'#FFC107', font:{size:12} }, grid:{ color:'rgba(255,255,255,.08)' }, ticks:{ color:'#a8c9b8' }, min:0 },
+        y: { title:{ display:true, text:'Height (m)',   color:'#FFC107', font:{size:12} }, grid:{ color:'rgba(255,255,255,.08)' }, ticks:{ color:'#a8c9b8' }, min:0 }
+      }
+    }
+  });
+
+  syncControls();
+
+  // Run immediately with defaults
+  courtClickX = 6;
+  update();
+</script>
 </body>
 </html>
