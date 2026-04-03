@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,39 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideInLeft {
-      from { opacity: 0; transform: translateX(-20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -1000px 0; }
-      100% { background-position: 1000px 0; }
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes glow {
-      0%, 100% { text-shadow: 0 0 0 rgba(55, 138, 221, 0), 0 0 10px rgba(55, 138, 221, 0); }
-      50% { text-shadow: 0 0 5px rgba(55, 138, 221, 0.5), 0 0 20px rgba(55, 138, 221, 0.3); }
-    }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+      background: #f5f5f5;
       color: #1a1a1a;
       min-height: 100vh;
       padding: 2rem 1rem;
@@ -53,7 +23,6 @@
 
     header {
       margin-bottom: 2rem;
-      animation: slideInLeft 0.6s ease-out;
     }
 
     header h1 {
@@ -73,13 +42,6 @@
       border: 1px solid #e0e0e0;
       padding: 1.25rem;
       margin-bottom: 1.25rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-      animation: fadeIn 0.5s ease-out;
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
 
     .card-title {
@@ -89,7 +51,6 @@
       margin-bottom: 1rem;
       text-transform: lowercase;
       letter-spacing: 0.02em;
-      animation: slideInLeft 0.6s ease-out 0.1s backwards;
     }
 
     /* Sliders */
@@ -98,18 +59,6 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 14px;
-      animation: fadeIn 0.5s ease-out backwards;
-      transition: transform 0.2s ease;
-    }
-
-    .slider-row:nth-child(1) { animation-delay: 0.1s; }
-    .slider-row:nth-child(2) { animation-delay: 0.15s; }
-    .slider-row:nth-child(3) { animation-delay: 0.2s; }
-    .slider-row:nth-child(4) { animation-delay: 0.25s; }
-    .slider-row:nth-child(5) { animation-delay: 0.3s; }
-
-    .slider-row:hover {
-      transform: translateX(4px);
     }
 
     .slider-row:last-child { margin-bottom: 0; }
@@ -119,12 +68,6 @@
       color: #555;
       width: 140px;
       flex-shrink: 0;
-      transition: color 0.3s ease;
-    }
-
-    .slider-row:hover .slider-label {
-      color: #378ADD;
-      font-weight: 500;
     }
 
     .slider-row input[type="range"] {
@@ -132,15 +75,9 @@
       -webkit-appearance: none;
       height: 4px;
       border-radius: 2px;
-      background: linear-gradient(to right, #ddd 0%, #ddd 100%);
+      background: #ddd;
       outline: none;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .slider-row input[type="range"]:hover {
-      height: 6px;
-      box-shadow: 0 0 12px rgba(55, 138, 221, 0.2);
     }
 
     .slider-row input[type="range"]::-webkit-slider-thumb {
@@ -152,16 +89,6 @@
       cursor: pointer;
       border: 2px solid #fff;
       box-shadow: 0 0 0 1px #378ADD;
-      transition: all 0.2s ease;
-    }
-
-    .slider-row input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 0 1px #378ADD, 0 0 12px rgba(55, 138, 221, 0.5);
-    }
-
-    .slider-row input[type="range"]::-webkit-slider-thumb:active {
-      animation: bounce 0.4s ease-out;
     }
 
     .slider-row input[type="range"]::-moz-range-thumb {
@@ -172,12 +99,6 @@
       cursor: pointer;
       border: 2px solid #fff;
       box-shadow: 0 0 0 1px #378ADD;
-      transition: all 0.2s ease;
-    }
-
-    .slider-row input[type="range"]::-moz-range-thumb:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 0 1px #378ADD, 0 0 12px rgba(55, 138, 221, 0.5);
     }
 
     .slider-val {
@@ -186,11 +107,6 @@
       min-width: 80px;
       text-align: right;
       color: #1a1a1a;
-      transition: all 0.3s ease;
-    }
-
-    .slider-val.updating {
-      animation: glow 0.6s ease-in-out;
     }
 
     /* Stat cards */
@@ -206,49 +122,22 @@
     }
 
     .stat {
-      background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+      background: #f9f9f9;
       border-radius: 8px;
       padding: 0.75rem 1rem;
       border: 1px solid #e8e8e8;
-      animation: fadeIn 0.5s ease-out backwards;
-      transition: all 0.3s ease;
-      overflow: hidden;
-    }
-
-    .stat:nth-child(1) { animation-delay: 0.2s; }
-    .stat:nth-child(2) { animation-delay: 0.25s; }
-    .stat:nth-child(3) { animation-delay: 0.3s; }
-    .stat:nth-child(4) { animation-delay: 0.35s; }
-
-    .stat:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(55, 138, 221, 0.15);
-      border-color: #378ADD;
     }
 
     .stat-label {
       font-size: 12px;
       color: #888;
       margin-bottom: 4px;
-      transition: color 0.3s ease;
-    }
-
-    .stat:hover .stat-label {
-      color: #378ADD;
     }
 
     .stat-val {
       font-size: 20px;
       font-weight: 600;
       color: #1a1a1a;
-      min-height: 28px;
-      display: flex;
-      align-items: center;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .stat-val.updating {
-      animation: pulse 0.5s ease-out, glow 0.6s ease-in-out;
     }
 
     /* Chart */
@@ -256,18 +145,10 @@
       position: relative;
       width: 100%;
       height: 300px;
-      animation: fadeIn 0.6s ease-out 0.2s backwards;
-    }
-
-    canvas {
-      animation: fadeIn 0.5s ease-out;
     }
 
     /* Table */
-    .table-wrap { 
-      overflow-x: auto;
-      animation: fadeIn 0.6s ease-out 0.3s backwards;
-    }
+    .table-wrap { overflow-x: auto; }
 
     table {
       width: 100%;
@@ -281,38 +162,17 @@
       color: #888;
       border-bottom: 1px solid #eee;
       font-weight: 400;
-      animation: slideInLeft 0.5s ease-out backwards;
     }
-
-    th:nth-child(1) { animation-delay: 0.35s; }
-    th:nth-child(2) { animation-delay: 0.4s; }
-    th:nth-child(3) { animation-delay: 0.45s; }
-    th:nth-child(4) { animation-delay: 0.5s; }
 
     td {
       padding: 8px 12px;
       border-bottom: 1px solid #f0f0f0;
       color: #1a1a1a;
-      transition: all 0.3s ease;
     }
 
     tr:last-child td { border-bottom: none; }
 
-    tr {
-      animation: fadeIn 0.4s ease-out backwards;
-    }
-
-    tbody tr:nth-child(1) { animation-delay: 0.4s; }
-    tbody tr:nth-child(2) { animation-delay: 0.45s; }
-    tbody tr:nth-child(3) { animation-delay: 0.5s; }
-    tbody tr:nth-child(4) { animation-delay: 0.55s; }
-    tbody tr:nth-child(5) { animation-delay: 0.6s; }
-    tbody tr:nth-child(n+6) { animation-delay: 0.65s; }
-
-    tr:hover td { 
-      background: #fafafa;
-      transform: translateX(4px);
-    }
+    tr:hover td { background: #fafafa; }
 
     /* Court reference line label */
     .legend {
@@ -322,32 +182,18 @@
       margin-top: 10px;
       font-size: 12px;
       color: #888;
-      animation: fadeIn 0.5s ease-out 0.3s backwards;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .legend-item:hover {
-      color: #378ADD;
-      transform: translateX(2px);
     }
 
     .legend-line {
       width: 24px;
       height: 2px;
       border-radius: 1px;
-      transition: all 0.3s ease;
-    }
-
-    .legend-item:hover .legend-line {
-      box-shadow: 0 0 8px currentColor;
-      transform: scaleX(1.2);
     }
 
     footer {
@@ -355,15 +201,6 @@
       font-size: 12px;
       color: #aaa;
       text-align: center;
-      animation: fadeIn 0.6s ease-out 0.4s backwards;
-    }
-
-    /* Ball animation canvas overlay */
-    #ballCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      pointer-events: none;
     }
   </style>
 </head>
@@ -371,7 +208,7 @@
   <div class="container">
 
     <header>
-      <h1>⚾ Tennis ball trajectory simulator</h1>
+      <h1>Tennis ball trajectory simulator</h1>
       <p>Adrian Marin &mdash; Physics-based simulation with drag and Magnus (spin) effect</p>
     </header>
 
@@ -381,7 +218,7 @@
 
       <div class="slider-row">
         <span class="slider-label">Initial velocity</span>
-        <input type="range" min="5" max="100" step="1" value="50" id="vel" />
+        <input type="range" min="5" max="70" step="1" value="50" id="vel" />
         <span class="slider-val"><span id="vel-out">50</span> m/s</span>
       </div>
 
@@ -393,7 +230,7 @@
 
       <div class="slider-row">
         <span class="slider-label">Initial height</span>
-        <input type="range" min="0.5" max="5" step="0.1" value="1.5" id="ht" />
+        <input type="range" min="0.5" max="3" step="0.1" value="1.5" id="ht" />
         <span class="slider-val"><span id="ht-out">1.5</span> m</span>
       </div>
 
@@ -446,7 +283,7 @@
           <span>Net (0.91 m at 11.89 m)</span>
         </div>
         <div class="legend-item">
-          <div class="legend-line" style="background:#639922;"></div>
+          <div class="legend-line" style="background:#63992290;"></div>
           <span>Service box end (6.4 m)</span>
         </div>
         <div class="legend-item">
@@ -496,42 +333,6 @@
     const MAGNUS_CONSTANT= 0.5 * AIR_DENSITY * LIFT_COEFF  * AREA / BALL_MASS;
 
     function r2(n) { return Math.round(n * 100) / 100; }
-
-    // ── Animated value updates ───────────────────────────────────────────
-    function animateValue(element, newValue, duration = 500) {
-      const oldValue = parseFloat(element.textContent) || 0;
-      const isString = isNaN(newValue);
-      
-      if (isString) {
-        element.textContent = newValue;
-        element.classList.add('updating');
-        setTimeout(() => element.classList.remove('updating'), 600);
-        return;
-      }
-
-      element.classList.add('updating');
-      const startTime = Date.now();
-      const startValue = oldValue;
-      const diff = newValue - oldValue;
-
-      function frame() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = progress < 0.5 
-          ? 2 * progress * progress 
-          : -1 + (4 - 2 * progress) * progress;
-        
-        const currentValue = startValue + diff * easeProgress;
-        element.textContent = r2(currentValue);
-
-        if (progress < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          element.classList.remove('updating');
-        }
-      }
-      requestAnimationFrame(frame);
-    }
 
     // ── Full simulation → returns dense point array ───────────────────────
     function simulate(initVel, angleDeg, initHeight, omega) {
@@ -618,17 +419,15 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: {
-          duration: 800,
-          easing: 'easeInOutQuart'
-        },
+        animation: false,
         plugins: {
           legend: { display: false },
           tooltip: {
             callbacks: {
               label: ctx => `x: ${r2(ctx.parsed.x)} m,  y: ${r2(ctx.parsed.y)} m`
             }
-          }
+          },
+          // Court reference lines via annotation-free approach (drawn as datasets)
         },
         scales: {
           x: {
@@ -656,40 +455,24 @@
       const steps     = parseInt(document.getElementById('steps').value);
       const omega     = spinRPM * (2 * Math.PI / 60);
 
-      // Update readouts with animation
-      const velElem = document.getElementById('vel-out');
-      const angElem = document.getElementById('ang-out');
-      const htElem = document.getElementById('ht-out');
-      const spinElem = document.getElementById('spin-out');
-      const stepsElem = document.getElementById('steps-out');
-
-      if (velElem.textContent !== initVel.toString()) {
-        animateValue(velElem, initVel, 300);
-      }
-      if (angElem.textContent !== angleDeg.toString()) {
-        animateValue(angElem, angleDeg, 300);
-      }
-      if (htElem.textContent !== initHeight.toFixed(1)) {
-        animateValue(htElem, initHeight.toFixed(1), 300);
-      }
-      if (spinElem.textContent !== spinRPM.toString()) {
-        animateValue(spinElem, spinRPM, 300);
-      }
-      if (stepsElem.textContent !== steps.toString()) {
-        animateValue(stepsElem, steps, 300);
-      }
+      // Update readouts
+      document.getElementById('vel-out').textContent   = initVel;
+      document.getElementById('ang-out').textContent   = angleDeg;
+      document.getElementById('ht-out').textContent    = initHeight.toFixed(1);
+      document.getElementById('spin-out').textContent  = spinRPM;
+      document.getElementById('steps-out').textContent = steps;
 
       // Run simulation
       const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
       const finalX = r2(pts[pts.length - 1].x);
 
-      // Stat cards with animation
-      animateValue(document.getElementById('s-range'), finalX);
-      animateValue(document.getElementById('s-height'), maxY);
-      animateValue(document.getElementById('s-time'), totalTime);
-      
-      const spinType = spinRPM > 200 ? 'Topspin' : spinRPM < -200 ? 'Backspin' : 'Flat';
-      animateValue(document.getElementById('s-spin'), spinType);
+      // Stat cards
+      document.getElementById('s-range').textContent  = finalX + ' m';
+      document.getElementById('s-height').textContent = r2(maxY) + ' m';
+      document.getElementById('s-time').textContent   = r2(totalTime) + ' s';
+      document.getElementById('s-spin').textContent   =
+        spinRPM >  200 ? 'Topspin' :
+        spinRPM < -200 ? 'Backspin' : 'Flat';
 
       // Downsample for chart performance
       const skip     = Math.max(1, Math.floor(pts.length / 300));
@@ -751,19 +534,21 @@
       ];
 
       chart.options.scales.x.max = xMax;
-      chart.update();
+      chart.update('none');
+
+      // Step table
+      const rows  = getTableRows(initVel, angleDeg, initHeight, omega, steps);
+      const tbody = document.getElementById('tbl');
+      tbody.innerHTML = rows
+        .map(r => `<tr><td>${r.step}</td><td>${r.x}</td><td>${r.y}</td><td>${r.t}</td></tr>`)
+        .join('');
     }
 
-    // ── Wire up sliders with debouncing ────────────────────��──────────────
-    let updateTimeout;
-    ['vel', 'ang', 'ht', 'spin', 'steps'].forEach(id => {
-      document.getElementById(id).addEventListener('input', () => {
-        clearTimeout(updateTimeout);
-        updateTimeout = setTimeout(update, 50);
-      });
-    });
+    // ── Wire up sliders ───────────────────────────────────────────────────
+    ['vel', 'ang', 'ht', 'spin', 'steps'].forEach(id =>
+      document.getElementById(id).addEventListener('input', update)
+    );
 
-    // Initial render
     update();
   </script>
 </body>
