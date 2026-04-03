@@ -90,6 +90,11 @@
       100% { opacity: 0; }
     }
 
+    @keyframes passwordPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
@@ -97,6 +102,105 @@
       min-height: 100vh;
       padding: 2rem 1rem;
       position: relative;
+    }
+
+    /* PASSWORD LOCK SCREEN */
+    #passwordOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .password-container {
+      background: rgba(26, 71, 42, 0.95);
+      border: 2px solid rgba(76, 175, 80, 0.6);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
+      max-width: 400px;
+      width: 90%;
+      animation: slideUp 0.8s ease-out;
+      text-align: center;
+    }
+
+    .password-container h2 {
+      font-size: 2rem;
+      color: #4CAF50;
+      margin-bottom: 10px;
+      animation: titleGlow 4s ease-in-out infinite;
+    }
+
+    .password-container p {
+      color: #b8d4c4;
+      margin-bottom: 2rem;
+      font-size: 14px;
+    }
+
+    .password-input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    #passwordInput {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid rgba(76, 175, 80, 0.4);
+      border-radius: 10px;
+      background: rgba(26, 71, 42, 0.7);
+      color: #FFC107;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    #passwordInput:focus {
+      outline: none;
+      border-color: rgba(255, 193, 7, 0.6);
+      box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+    }
+
+    #passwordInput::placeholder {
+      color: rgba(255, 193, 7, 0.5);
+    }
+
+    .password-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .password-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5);
+    }
+
+    .password-btn:active {
+      transform: translateY(0);
+    }
+
+    .password-error {
+      color: #FF6B6B;
+      font-size: 13px;
+      margin-top: 10px;
+      animation: passwordPulse 0.5s ease-out;
+      min-height: 20px;
     }
 
     #introOverlay {
@@ -496,10 +600,17 @@
     }
 
     .stat-value {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       color: #4CAF50;
       min-height: 40px;
+    }
+
+    .stat-unit {
+      font-size: 13px;
+      color: #FFC107;
+      font-weight: 600;
+      margin-top: 4px;
     }
 
     .stat-value.updating {
@@ -629,6 +740,24 @@
   </style>
 </head>
 <body>
+  <!-- PASSWORD PROTECTION -->
+  <div id="passwordOverlay">
+    <div class="password-container">
+      <h2>🔐 Access Required</h2>
+      <p>Enter the password to access the Tennis Simulator</p>
+      <div class="password-input-group">
+        <input 
+          type="password" 
+          id="passwordInput" 
+          placeholder="Enter password" 
+          autocomplete="off"
+        />
+        <button class="password-btn" onclick="checkPassword()">Enter</button>
+      </div>
+      <div class="password-error" id="passwordError"></div>
+    </div>
+  </div>
+
   <!-- EPIC INTRO ANIMATION -->
   <div id="introOverlay">
     <div class="intro-container">
@@ -724,18 +853,22 @@
       <div class="stat-card">
         <div class="stat-label">📏 Range</div>
         <div class="stat-value" id="s-range">—</div>
+        <div class="stat-unit">meters</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">📈 Max Height</div>
         <div class="stat-value" id="s-height">—</div>
+        <div class="stat-unit">meters</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">⏱️ Flight Time</div>
         <div class="stat-value" id="s-time">—</div>
+        <div class="stat-unit">seconds</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">🌀 Spin Type</div>
         <div class="stat-value" id="s-spin">—</div>
+        <div class="stat-unit">&nbsp;</div>
       </div>
     </div>
 
@@ -794,6 +927,30 @@
 
   <script>
     // ════════════════════════════════════════════════════════════════════════
+    // PASSWORD PROTECTION
+    // ════════════════════════════════════════════════════════════════════════
+    const CORRECT_PASSWORD = "Tennisisfun123$";
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      const errorDiv = document.getElementById('passwordError');
+      
+      if (input === CORRECT_PASSWORD) {
+        document.getElementById('passwordOverlay').style.display = 'none';
+        errorDiv.textContent = '';
+      } else {
+        errorDiv.textContent = '❌ Incorrect password. Try again!';
+      }
+    }
+
+    // Allow Enter key
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+
+    // ════════════════════════════════════════════════════════════════════════
     // GENERATE INTRO PARTICLES
     // ════════════════════════════════════════════════════════════════════════
     function generateParticles() {
@@ -812,7 +969,7 @@
 
     generateParticles();
 
-    // ══════════════════════════════════════════════════════��═════════════════
+    // ════════════════════════════════════════════════════════════════════════
     // PHYSICS CONSTANTS
     // ════════════════════════════════════════════════════════════════════════
     const GRAVITY = -9.81;
@@ -867,7 +1024,7 @@
       requestAnimationFrame(animate);
     }
 
-    // ═════════════════════════════════════════════════════════════════════��══
+    // ════════════════════════════════════════════════════════════════════════
     // SIMULATION ENGINE
     // ════════════════════════════════════════════════════════════════════════
     function simulate(initVel, angleDeg, initHeight, omega) {
@@ -1030,7 +1187,7 @@
         const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
         const finalX = round2(pts[pts.length - 1].x);
 
-        // Update stat cards
+        // Update stat cards with values and units
         animateValue(document.getElementById('s-range'), finalX);
         animateValue(document.getElementById('s-height'), maxY);
         animateValue(document.getElementById('s-time'), totalTime);
@@ -1121,7 +1278,7 @@
     }
 
     // ════════════════════════════════════════════════════════════════════════
-    // SYNCHRONIZATION ENGINE - THE FIX
+    // SYNCHRONIZATION ENGINE
     // ════════════════════════════════════════════════════════════════════════
     function syncControls() {
       const controls = [
