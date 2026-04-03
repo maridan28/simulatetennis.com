@@ -53,6 +53,44 @@
       50% { text-shadow: 0 0 20px rgba(255, 193, 7, 0.6), 0 0 40px rgba(76, 175, 80, 0.4); }
     }
 
+    /* EPIC TENNIS COURT ANIMATION */
+    @keyframes courtSlideIn {
+      0% { transform: translateX(-100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes ballTrajectory {
+      0% { transform: translate(-500px, -300px) scale(1.5); opacity: 0; }
+      10% { opacity: 1; }
+      50% { transform: translate(200px, -150px) scale(1.2); }
+      90% { opacity: 1; }
+      100% { transform: translate(600px, 100px) scale(0.8); opacity: 0; }
+    }
+
+    @keyframes netSwing {
+      0% { transform: scaleY(0.8) rotateZ(-5deg); }
+      50% { transform: scaleY(1.1) rotateZ(5deg); }
+      100% { transform: scaleY(0.8) rotateZ(-5deg); }
+    }
+
+    @keyframes racketSwing {
+      0% { transform: rotateZ(-45deg) translateX(-100px); }
+      50% { transform: rotateZ(45deg) translateX(100px); }
+      100% { transform: rotateZ(-45deg) translateX(-100px); }
+    }
+
+    @keyframes courtLighting {
+      0% { filter: brightness(0.6); }
+      50% { filter: brightness(1.2); }
+      100% { filter: brightness(1); }
+    }
+
+    @keyframes fadeOutOverlay {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
@@ -60,6 +98,206 @@
       min-height: 100vh;
       padding: 2rem 1rem;
       position: relative;
+    }
+
+    /* STARTUP ANIMATION OVERLAY */
+    #introOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOutOverlay 10s ease-out forwards;
+    }
+
+    .intro-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Animated Tennis Court */
+    .intro-court {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 400px;
+      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
+      border: 3px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
+      animation: courtSlideIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+
+    /* Court center line */
+    .intro-court::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background: #fff;
+      transform: translateX(-50%);
+      animation: courtLighting 3s ease-in-out infinite 1.5s;
+    }
+
+    /* Court service lines */
+    .intro-court::after {
+      content: '';
+      position: absolute;
+      top: 25%;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      animation: courtLighting 3s ease-in-out infinite 1.5s;
+    }
+
+    /* Animated net */
+    .intro-net {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 80px;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.3) 0px,
+          rgba(255, 255, 255, 0.3) 2px,
+          transparent 2px,
+          transparent 6px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.3) 0px,
+          rgba(255, 255, 255, 0.3) 2px,
+          transparent 2px,
+          transparent 6px
+        );
+      border: 2px solid #fff;
+      border-radius: 10px;
+      animation: netSwing 1.5s ease-in-out 2s infinite;
+      opacity: 0;
+      animation: netSwing 1.5s ease-in-out 2s infinite, fadeIn 0.5s ease-out 2s forwards;
+    }
+
+    /* Animated tennis ball */
+    .intro-ball {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      top: -50px;
+      left: 100px;
+      box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6), 0 0 30px rgba(76, 175, 80, 0.4);
+      animation: ballTrajectory 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s;
+      opacity: 0;
+    }
+
+    /* Animated racket */
+    .intro-racket {
+      position: absolute;
+      bottom: -100px;
+      left: 50px;
+      width: 80px;
+      height: 100px;
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out 1s forwards;
+    }
+
+    .racket-head {
+      width: 80px;
+      height: 80px;
+      border: 4px solid #FFC107;
+      border-radius: 50%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 193, 7, 0.2) 10px,
+        rgba(255, 193, 7, 0.2) 20px
+      );
+      margin: 0 auto;
+      animation: racketSwing 2s ease-in-out 1.5s infinite;
+      transform-origin: center bottom;
+    }
+
+    .racket-handle {
+      width: 12px;
+      height: 40px;
+      background: #8B7355;
+      margin: 0 auto;
+      border-radius: 6px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Intro text */
+    .intro-text {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 3.5s forwards;
+    }
+
+    .intro-text h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #4CAF50;
+      margin-bottom: 10px;
+      animation: glow 2s ease-in-out infinite 3.5s;
+    }
+
+    .intro-text p {
+      font-size: 1.3rem;
+      color: #FFC107;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Particles background */
+    .intro-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #4CAF50;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatParticle 8s infinite;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
 
     .container {
@@ -109,7 +347,7 @@
 
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
     }
 
@@ -135,12 +373,24 @@
 
     .control-wrapper {
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slider-and-input {
+      display: flex;
       align-items: center;
       gap: 12px;
       background: rgba(76, 175, 80, 0.1);
       padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid rgba(76, 175, 80, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .slider-and-input:hover {
+      background: rgba(76, 175, 80, 0.15);
+      border-color: rgba(255, 193, 7, 0.4);
     }
 
     input[type="range"] {
@@ -176,12 +426,40 @@
       box-shadow: 0 0 0 2px #4CAF50, 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
-    .control-value {
-      min-width: 80px;
-      text-align: right;
+    /* Text input styling */
+    input[type="number"] {
+      width: 100px;
+      padding: 8px 10px;
+      border: 1px solid rgba(76, 175, 80, 0.4);
+      border-radius: 8px;
+      background: rgba(26, 71, 42, 0.5);
+      color: #FFC107;
       font-weight: 700;
       font-size: 14px;
-      color: #FFC107;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: rgba(255, 193, 7, 0.6);
+      background: rgba(76, 175, 80, 0.15);
+      box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+    }
+
+    input[type="number"]::selection {
+      background: rgba(255, 193, 7, 0.3);
+    }
+
+    /* Spinners (arrow buttons) styling for number input */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
     }
 
     .stats-section {
@@ -350,10 +628,34 @@
       .controls-grid { grid-template-columns: 1fr; }
       .stats-section { grid-template-columns: repeat(2, 1fr); }
       .chart-container { height: 300px; }
+      .intro-court { width: 90%; height: 300px; }
     }
   </style>
 </head>
 <body>
+  <!-- EPIC INTRO ANIMATION -->
+  <div id="introOverlay">
+    <div class="intro-container">
+      <div class="intro-particles" id="particles"></div>
+      
+      <div class="intro-court">
+        <div class="intro-ball"></div>
+      </div>
+
+      <div class="intro-net"></div>
+
+      <div class="intro-racket">
+        <div class="racket-head"></div>
+        <div class="racket-handle"></div>
+      </div>
+
+      <div class="intro-text">
+        <h1><span class="ball-emoji">🎾</span> TENNIS PHYSICS</h1>
+        <p>Let's Calculate Your Perfect Shot</p>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <header>
       <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
@@ -367,40 +669,55 @@
         <div class="control-group">
           <label class="control-label">Initial Velocity (m/s)</label>
           <div class="control-wrapper">
-            <input type="range" min="5" max="100" step="1" value="50" id="vel" />
-            <span class="control-value" id="vel-out">50</span>
+            <div class="slider-and-input">
+              <input type="range" min="5" max="100" step="1" value="50" id="vel" />
+              <input type="number" min="5" max="100" step="1" value="50" id="vel-input" />
+            </div>
+            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">Launch Angle (°)</label>
           <div class="control-wrapper">
-            <input type="range" min="-5" max="45" step="1" value="12" id="ang" />
-            <span class="control-value" id="ang-out">12</span>
+            <div class="slider-and-input">
+              <input type="range" min="-5" max="45" step="1" value="12" id="ang" />
+              <input type="number" min="-5" max="45" step="1" value="12" id="ang-input" />
+            </div>
+            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">Initial Height (m)</label>
           <div class="control-wrapper">
-            <input type="range" min="0.5" max="5" step="0.1" value="1.5" id="ht" />
-            <span class="control-value" id="ht-out">1.5</span>
+            <div class="slider-and-input">
+              <input type="range" min="0.5" max="5" step="0.1" value="1.5" id="ht" />
+              <input type="number" min="0.5" max="5" step="0.1" value="1.5" id="ht-input" />
+            </div>
+            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">Spin (RPM)</label>
           <div class="control-wrapper">
-            <input type="range" min="-5000" max="5000" step="100" value="2500" id="spin" />
-            <span class="control-value" id="spin-out">2500</span>
+            <div class="slider-and-input">
+              <input type="range" min="-5000" max="5000" step="100" value="2500" id="spin" />
+              <input type="number" min="-5000" max="5000" step="100" value="2500" id="spin-input" />
+            </div>
+            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
         <div class="control-group">
           <label class="control-label">Table Steps</label>
           <div class="control-wrapper">
-            <input type="range" min="3" max="20" step="1" value="5" id="steps" />
-            <span class="control-value" id="steps-out">5</span>
+            <div class="slider-and-input">
+              <input type="range" min="3" max="20" step="1" value="5" id="steps" />
+              <input type="number" min="3" max="20" step="1" value="5" id="steps-input" />
+            </div>
+            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
       </div>
@@ -480,7 +797,26 @@
   </div>
 
   <script>
-    // ════════════��═══════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════════════════════════════
+    // GENERATE INTRO PARTICLES
+    // ════════════════════════════════════════════════════════════════════════
+    function generateParticles() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animation = `floatParticle ${5 + Math.random() * 5}s ease-in-out ${Math.random() * 2}s infinite`;
+        container.appendChild(particle);
+      }
+    }
+
+    generateParticles();
+
+    // ════════════════════════════════════════════════════════════════════════
     // PHYSICS CONSTANTS
     // ════════════════════════════════════════════════════════════════════════
     const GRAVITY = -9.81;
@@ -694,12 +1030,12 @@
         const steps = parseInt(document.getElementById('steps').value);
         const omega = spinRPM * (2 * Math.PI / 60);
 
-        // Update control values
-        document.getElementById('vel-out').textContent = initVel;
-        document.getElementById('ang-out').textContent = angleDeg;
-        document.getElementById('ht-out').textContent = initHeight.toFixed(1);
-        document.getElementById('spin-out').textContent = spinRPM;
-        document.getElementById('steps-out').textContent = steps;
+        // Sync inputs and sliders
+        document.getElementById('vel-input').value = initVel;
+        document.getElementById('ang-input').value = angleDeg;
+        document.getElementById('ht-input').value = initHeight;
+        document.getElementById('spin-input').value = spinRPM;
+        document.getElementById('steps-input').value = steps;
 
         // Run simulation
         const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
@@ -801,13 +1137,41 @@
     document.addEventListener('DOMContentLoaded', function() {
       initChart();
 
-      let updateTimeout;
-      ['vel', 'ang', 'ht', 'spin', 'steps'].forEach(id => {
-        const elem = document.getElementById(id);
-        if (elem) {
-          elem.addEventListener('input', () => {
-            clearTimeout(updateTimeout);
-            updateTimeout = setTimeout(update, 50);
+      // Slider and input sync
+      const controls = [
+        { slider: 'vel', input: 'vel-input' },
+        { slider: 'ang', input: 'ang-input' },
+        { slider: 'ht', input: 'ht-input' },
+        { slider: 'spin', input: 'spin-input' },
+        { slider: 'steps', input: 'steps-input' }
+      ];
+
+      controls.forEach(ctrl => {
+        const sliderElem = document.getElementById(ctrl.slider);
+        const inputElem = document.getElementById(ctrl.input);
+
+        if (sliderElem && inputElem) {
+          // Sync slider to input
+          sliderElem.addEventListener('input', () => {
+            const value = parseFloat(sliderElem.value);
+            const step = sliderElem.step;
+            if (step.includes('.')) {
+              inputElem.value = value;
+            } else {
+              inputElem.value = parseInt(value);
+            }
+            update();
+          });
+
+          // Sync input to slider
+          inputElem.addEventListener('input', () => {
+            let value = parseFloat(inputElem.value);
+            const min = parseFloat(sliderElem.min);
+            const max = parseFloat(sliderElem.max);
+            
+            value = Math.max(min, Math.min(max, value));
+            sliderElem.value = value;
+            update();
           });
         }
       });
