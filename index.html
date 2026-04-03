@@ -12,10 +12,6 @@
       from { opacity: 0; transform: translateY(15px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.08); }
-    }
     @keyframes titleGlow {
       0%, 100% { text-shadow: 0 0 10px rgba(255,193,7,.3), 0 0 20px rgba(76,175,80,.2); }
       50%       { text-shadow: 0 0 20px rgba(255,193,7,.6), 0 0 40px rgba(76,175,80,.4); }
@@ -42,7 +38,6 @@
 
     .container { max-width: 1100px; margin: 0 auto; width: 100%; }
 
-    /* ── Header ── */
     header { text-align: center; margin-bottom: 2rem; animation: fadeIn .8s ease-out; }
     h1 {
       font-size: clamp(1.6rem, 5vw, 3rem);
@@ -60,7 +55,6 @@
     }
     .ball-emoji { display: inline-block; animation: ballSpin 6s linear infinite; }
 
-    /* ── Card ── */
     .card {
       background: rgba(45,90,61,.6);
       border-radius: 18px;
@@ -78,7 +72,6 @@
       margin-bottom: 1.25rem;
     }
 
-    /* ── Controls ── */
     .controls-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -92,6 +85,13 @@
       margin-bottom: .5rem;
       text-transform: uppercase;
       letter-spacing: .1em;
+    }
+    .control-label span.hint {
+      color: #FFC107;
+      font-style: italic;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: .7rem;
     }
     .slider-and-input {
       display: flex;
@@ -155,7 +155,12 @@
       box-shadow: 0 0 12px rgba(255,193,7,.25);
     }
 
-    /* ── Stats ── */
+    /* hit-position highlight strip */
+    .hit-position-card {
+      background: rgba(76,175,80,.18);
+      border-color: rgba(255,193,7,.5);
+    }
+
     .stats-section {
       display: grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
@@ -182,7 +187,6 @@
     .stat-value { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 900; color: #4CAF50; min-height: 2rem; word-break: break-all; }
     .stat-unit  { font-size: .75rem; color: #FFC107; font-weight: 600; margin-top: 4px; }
 
-    /* ── Net status badge ── */
     .net-status {
       display: inline-block;
       margin-top: .75rem;
@@ -195,7 +199,6 @@
     .net-status.clear { background: rgba(76,175,80,.25); border: 1px solid #4CAF50; color: #4CAF50; }
     .net-status.hit   { background: rgba(255,107,107,.25); border: 1px solid #FF6B6B; color: #FF6B6B; }
 
-    /* ── Chart ── */
     .chart-container {
       position: relative;
       width: 100%;
@@ -219,7 +222,6 @@
     }
     .legend-line { width: 24px; height: 2px; border-radius: 1px; flex-shrink: 0; }
 
-    /* ── Table ── */
     .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 320px; }
     th {
@@ -238,7 +240,6 @@
     tbody tr:hover { background: rgba(76,175,80,.15); }
     tbody tr.active { animation: rowHighlight .8s ease-in-out; }
 
-    /* ── Footer ── */
     footer {
       margin-top: 2rem;
       text-align: center;
@@ -258,9 +259,26 @@
     <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
   </header>
 
-  <!-- Controls -->
+  <!-- Hit position (prominent separate card) -->
+  <div class="card hit-position-card">
+    <div class="section-title">📍 Your Hit Position on Court</div>
+    <div class="controls-grid">
+      <div class="control-group">
+        <label class="control-label">Hit Distance from Your Baseline (m) <span class="hint">0 = on baseline · 11.89 = at net</span></label>
+        <div class="slider-and-input">
+          <input type="range"  min="0" max="11.89" step="0.1" value="0" id="hitpos">
+          <input type="number" min="0" max="11.89" step="0.1" value="0" id="hitpos-input">
+        </div>
+      </div>
+      <div id="position-description" style="display:flex;align-items:center;font-size:.85rem;color:#FFC107;font-weight:600;gap:8px;">
+        📌 Standing on the baseline
+      </div>
+    </div>
+  </div>
+
+  <!-- Ball parameters -->
   <div class="card">
-    <div class="section-title">⚙️ Input Parameters</div>
+    <div class="section-title">⚙️ Ball Parameters</div>
     <div class="controls-grid">
       <div class="control-group">
         <label class="control-label">Initial Velocity (m/s)</label>
@@ -333,9 +351,11 @@
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:.75rem;">
       <div class="legend">
         <div class="legend-item"><div class="legend-line" style="background:#4CAF50;"></div>Ball path</div>
-        <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (11.89 m, 0.91 m tall)</div>
-        <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Service box (6.4 m)</div>
-        <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baseline (23.77 m)</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (0.91 m)</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Your service line</div>
+        <div class="legend-item"><div class="legend-line" style="background:#64B5F6;"></div>Opponent's service line</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baselines</div>
+        <div class="legend-item"><div class="legend-line" style="background:#CE93D8; height:3px; border-top: 2px dashed #CE93D8; background: transparent;"></div>Hit position</div>
       </div>
       <div id="net-status" class="net-status clear">✅ Clears net</div>
     </div>
@@ -347,7 +367,7 @@
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>Step</th><th>Distance (m)</th><th>Height (m)</th><th>Time (s)</th></tr>
+          <tr><th>Step</th><th>Abs. Distance (m)</th><th>From Hit Pos. (m)</th><th>Height (m)</th><th>Time (s)</th></tr>
         </thead>
         <tbody id="tbl"></tbody>
       </table>
@@ -355,17 +375,20 @@
   </div>
 
   <footer>
-    <strong>Physics constants:</strong> drag = 0.507 (Babolat all-court) &nbsp;|&nbsp;
+    <strong>Physics constants:</strong> drag = 0.507 &nbsp;|&nbsp;
     mass = 0.056 kg &nbsp;|&nbsp; radius = 0.0327 m &nbsp;|&nbsp;
     lift coefficient = 0.25 &nbsp;|&nbsp; Euler integration dt = 0.0001 s
     <br>
-    Net: 11.89 m from baseline, 0.91 m tall at center &nbsp;|&nbsp; Service box: 6.4 m &nbsp;|&nbsp; Baseline: 23.77 m
+    Net: 11.89 m from baseline, 0.91 m tall at centre &nbsp;|&nbsp;
+    Your service line: 6.4 m from your baseline &nbsp;|&nbsp;
+    Opponent's service line: 17.37 m from your baseline &nbsp;|&nbsp;
+    Baselines: 0 m &amp; 23.77 m
   </footer>
 
 </div>
 
 <script>
-  // ── Physics constants (from Projectile.java) ──────────────────────────
+  // ── Physics constants ─────────────────────────────────────────────────
   const GRAVITY         = -9.81;
   const AIR_DENSITY     = 1.225;
   const DRAG_COEFF      = 0.507;
@@ -377,25 +400,30 @@
   const DRAG_CONSTANT   = 0.5 * AIR_DENSITY * DRAG_COEFF  * AREA / BALL_MASS;
   const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF  * AREA / BALL_MASS;
 
-  // ── Court dimensions ──────────────────────────────────────────────────
-  const NET_X      = 11.89;  // metres from baseline
-  const NET_HEIGHT = 0.91;   // metres tall at centre
+  // ── Court dimensions (absolute, from YOUR baseline) ───────────────────
+  const COURT_LENGTH          = 23.77;
+  const NET_X_ABS             = 11.89;  // net is at half-court
+  const NET_HEIGHT            = 0.91;
+  const YOUR_SERVICE_LINE_ABS = 6.4;    // 6.4 m in from your baseline
+  const OPP_SERVICE_LINE_ABS  = COURT_LENGTH - 6.4; // = 17.37 m
 
   let chart = null;
 
   function r2(n) { return Math.round(n * 100) / 100; }
 
-  // ── Full simulation — returns dense point array + net-clearance info ──
-  function simulate(initVel, angleDeg, initHeight, omega) {
-    if (initVel === 0) return { pts: [{x:0,y:initHeight,t:0}], maxY: initHeight, totalTime: 0, netHeightAtX: initHeight, clearsNet: false };
+  // ── Simulation — origin is always 0 (absolute court coords) ──────────
+  // hitX = absolute position the ball is struck from
+  function simulate(initVel, angleDeg, initHeight, omega, hitX) {
+    if (initVel === 0) return { pts: [{x: hitX, y: initHeight, t: 0}], maxY: initHeight, totalTime: 0, netHeightAtX: null, clearsNet: false };
 
     const angle = angleDeg * Math.PI / 180;
     let vx = initVel * Math.cos(angle);
     let vy = initVel * Math.sin(angle);
-    let x = 0, y = initHeight, t = 0;
+    // start at absolute hitX
+    let x = hitX, y = initHeight, t = 0;
     const pts = [{ x, y, t }];
     let maxY = initHeight;
-    let netHeightAtX = null;   // ball's y when it crosses x = NET_X
+    let netHeightAtX = null;
 
     while (y >= 0 && t < 30) {
       const speed   = Math.sqrt(vx*vx + vy*vy);
@@ -411,10 +439,9 @@
       y  += vy * DT;
       t  += DT;
 
-      // Interpolate exact height at net position
-      if (netHeightAtX === null && prevX < NET_X && x >= NET_X) {
-        const frac = (NET_X - prevX) / (x - prevX);
-        netHeightAtX = y + (1 - frac) * (vy * DT); // approximate interpolation
+      if (netHeightAtX === null && prevX < NET_X_ABS && x >= NET_X_ABS) {
+        const frac = (NET_X_ABS - prevX) / (x - prevX);
+        netHeightAtX = y + (1 - frac) * (vy * DT);
       }
 
       if (y > maxY) maxY = y;
@@ -425,18 +452,17 @@
     return { pts, maxY, totalTime: t, netHeightAtX, clearsNet };
   }
 
-  // ── Table rows (mirrors printTable logic from Projectile.java) ─────────
-  function getTableRows(initVel, angleDeg, initHeight, omega, steps) {
-    if (initVel === 0) return [{ step: 0, x: 0, y: r2(initHeight), t: 0 }];
+  function getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX) {
+    if (initVel === 0) return [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0 }];
 
-    const { totalTime } = simulate(initVel, angleDeg, initHeight, omega);
+    const { totalTime } = simulate(initVel, angleDeg, initHeight, omega, hitX);
     const angle = angleDeg * Math.PI / 180;
     let vx = initVel * Math.cos(angle);
     let vy = initVel * Math.sin(angle);
     const printInterval = totalTime / steps;
     let nextPrint = printInterval;
-    let x = 0, y = initHeight, t = 0, step = 0;
-    const rows = [{ step: 0, x: 0, y: r2(initHeight), t: 0 }];
+    let x = hitX, y = initHeight, t = 0, step = 0;
+    const rows = [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0 }];
 
     while (y >= 0 && step < steps && t < 30) {
       const speed   = Math.sqrt(vx*vx + vy*vy);
@@ -451,14 +477,22 @@
       t  += DT;
       if (t >= nextPrint - DT / 2) {
         step++;
-        rows.push({ step, x: r2(x), y: r2(y), t: r2(t) });
+        rows.push({ step, xAbs: r2(x), xRel: r2(x - hitX), y: r2(y), t: r2(t) });
         nextPrint += printInterval;
       }
     }
     return rows;
   }
 
-  // ── Animated counter ───────────────────────────────────────────────────
+  function positionLabel(hitX) {
+    if (hitX < 0.2)  return '📌 Standing on the baseline';
+    if (hitX < 3)    return '🏃 Just inside the baseline';
+    if (hitX < YOUR_SERVICE_LINE_ABS - 0.2) return '🎾 In no-man\'s land';
+    if (hitX < YOUR_SERVICE_LINE_ABS + 0.2) return '📐 On your service line';
+    if (hitX < NET_X_ABS - 1.5) return '🚀 Inside the service box';
+    return '⚡ Close to the net';
+  }
+
   function animateValue(el, newVal, duration = 350) {
     if (typeof newVal === 'string' || isNaN(newVal)) { el.textContent = newVal; return; }
     const oldVal = parseFloat(el.textContent) || 0;
@@ -472,29 +506,32 @@
     requestAnimationFrame(tick);
   }
 
-  // ── Main update ────────────────────────────────────────────────────────
   function update() {
     const initVel    = parseFloat(document.getElementById('vel').value);
     const angleDeg   = parseFloat(document.getElementById('ang').value);
     const initHeight = parseFloat(document.getElementById('ht').value);
     const spinRPM    = parseFloat(document.getElementById('spin').value);
     const steps      = parseInt(document.getElementById('steps').value);
+    const hitX       = parseFloat(document.getElementById('hitpos').value);
     const omega      = spinRPM * (2 * Math.PI / 60);
 
-    const { pts, maxY, totalTime, netHeightAtX, clearsNet } = simulate(initVel, angleDeg, initHeight, omega);
-    const finalX = r2(pts[pts.length - 1].x);
+    document.getElementById('position-description').textContent = positionLabel(hitX);
 
-    // Stats
-    animateValue(document.getElementById('s-range'),  r2(pts[pts.length-1].x));
+    const { pts, maxY, totalTime, netHeightAtX, clearsNet } = simulate(initVel, angleDeg, initHeight, omega, hitX);
+    const finalX = pts[pts.length - 1].x;
+
+    animateValue(document.getElementById('s-range'),  r2(finalX - hitX));
     animateValue(document.getElementById('s-height'), r2(maxY));
     animateValue(document.getElementById('s-time'),   r2(totalTime));
     document.getElementById('s-spin').textContent =
       spinRPM >  200 ? '🎾 Topspin' :
       spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
 
-    // Net status badge
     const badge = document.getElementById('net-status');
-    if (netHeightAtX === null) {
+    if (hitX >= NET_X_ABS) {
+      badge.textContent = '⚠️ Hit position beyond net';
+      badge.className = 'net-status hit';
+    } else if (netHeightAtX === null) {
       badge.textContent = '⚠️ Doesn\'t reach net';
       badge.className = 'net-status hit';
     } else if (clearsNet) {
@@ -505,12 +542,10 @@
       badge.className = 'net-status hit';
     }
 
-    // Downsample for chart performance
     const skip     = Math.max(1, Math.floor(pts.length / 400));
     const chartPts = pts.filter((_,i) => i % skip === 0).map(p => ({ x: r2(p.x), y: r2(p.y) }));
-
-    // Always show at least to the baseline or beyond the ball's range
-    const xMax = Math.max(finalX * 1.1, 25);
+    const xMax     = Math.max(finalX * 1.05, COURT_LENGTH + 1);
+    const lineH    = 1.2; // short tick height for lines
 
     if (chart) {
       chart.data.datasets = [
@@ -526,21 +561,20 @@
           fill: false,
           order: 1
         },
-        // Net — full vertical line from ground to top
+        // Net
         {
-          data: [{ x: NET_X, y: 0 }, { x: NET_X, y: NET_HEIGHT }],
+          data: [{ x: NET_X_ABS, y: 0 }, { x: NET_X_ABS, y: NET_HEIGHT }],
           showLine: true,
           borderColor: '#FF6B6B',
           backgroundColor: 'transparent',
           pointRadius: 0,
-          borderWidth: 3,
-          borderDash: [],
+          borderWidth: 4,
           fill: false,
           order: 2
         },
-        // Service box line
+        // Your service line
         {
-          data: [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.5 }],
+          data: [{ x: YOUR_SERVICE_LINE_ABS, y: 0 }, { x: YOUR_SERVICE_LINE_ABS, y: lineH }],
           showLine: true,
           borderColor: '#FFC107',
           backgroundColor: 'transparent',
@@ -550,9 +584,21 @@
           fill: false,
           order: 3
         },
-        // Baseline
+        // Opponent's service line
         {
-          data: [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.5 }],
+          data: [{ x: OPP_SERVICE_LINE_ABS, y: 0 }, { x: OPP_SERVICE_LINE_ABS, y: lineH }],
+          showLine: true,
+          borderColor: '#64B5F6',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [4, 4],
+          fill: false,
+          order: 4
+        },
+        // Your baseline
+        {
+          data: [{ x: 0, y: 0 }, { x: 0, y: lineH }],
           showLine: true,
           borderColor: '#FF9800',
           backgroundColor: 'transparent',
@@ -560,28 +606,52 @@
           borderWidth: 2,
           borderDash: [4, 4],
           fill: false,
-          order: 4
-        }
+          order: 5
+        },
+        // Opponent's baseline
+        {
+          data: [{ x: COURT_LENGTH, y: 0 }, { x: COURT_LENGTH, y: lineH }],
+          showLine: true,
+          borderColor: '#FF9800',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [4, 4],
+          fill: false,
+          order: 6
+        },
+        // Hit position marker (vertical dashed line)
+        ...(hitX > 0.05 ? [{
+          data: [{ x: hitX, y: 0 }, { x: hitX, y: initHeight + 0.3 }],
+          showLine: true,
+          borderColor: '#CE93D8',
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          borderWidth: 2,
+          borderDash: [3, 3],
+          fill: false,
+          order: 7
+        }] : [])
       ];
       chart.options.scales.x.max = xMax;
       chart.update('none');
     }
 
     // Table
-    const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
+    const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX);
     document.getElementById('tbl').innerHTML = rows.map((r, i) =>
-      `<tr${i===0?' class="active"':''}><td>${r.step}</td><td>${r.x}</td><td>${r.y}</td><td>${r.t}</td></tr>`
+      `<tr${i===0?' class="active"':''}><td>${r.step}</td><td>${r.xAbs}</td><td>${r.xRel}</td><td>${r.y}</td><td>${r.t}</td></tr>`
     ).join('');
   }
 
-  // ── Sync slider ↔ number input ─────────────────────────────────────────
   function syncControls() {
     [
-      { s:'vel',   n:'vel-input',   min:0,     max:100  },
-      { s:'ang',   n:'ang-input',   min:-5,    max:45   },
-      { s:'ht',    n:'ht-input',    min:0.5,   max:5    },
-      { s:'spin',  n:'spin-input',  min:-5000, max:5000 },
-      { s:'steps', n:'steps-input', min:3,     max:20   }
+      { s:'vel',    n:'vel-input',    min:0,     max:100   },
+      { s:'ang',    n:'ang-input',    min:-5,    max:45    },
+      { s:'ht',     n:'ht-input',     min:0.5,   max:5     },
+      { s:'spin',   n:'spin-input',   min:-5000, max:5000  },
+      { s:'steps',  n:'steps-input',  min:3,     max:20    },
+      { s:'hitpos', n:'hitpos-input', min:0,     max:11.89 }
     ].forEach(({ s, n, min, max }) => {
       const sl = document.getElementById(s);
       const nu = document.getElementById(n);
@@ -594,18 +664,44 @@
     });
   }
 
-  // ── Init chart ─────────────────────────────────────────────────────────
+  // ── Chart annotations via custom plugin ───────────────────────────────
+  const courtLabelsPlugin = {
+    id: 'courtLabels',
+    afterDraw(chart) {
+      const { ctx, scales: { x, y } } = chart;
+      const labels = [
+        { xVal: 0,                 text: 'Your baseline',      color: '#FF9800' },
+        { xVal: YOUR_SERVICE_LINE_ABS, text: 'Your svc line', color: '#FFC107' },
+        { xVal: NET_X_ABS,         text: 'Net',                color: '#FF6B6B' },
+        { xVal: OPP_SERVICE_LINE_ABS,  text: "Opp svc line",  color: '#64B5F6' },
+        { xVal: COURT_LENGTH,      text: "Opp baseline",       color: '#FF9800' },
+      ];
+      ctx.save();
+      ctx.font = 'bold 10px sans-serif';
+      ctx.textAlign = 'center';
+      labels.forEach(({ xVal, text, color }) => {
+        const px = x.getPixelForValue(xVal);
+        const py = y.getPixelForValue(0);
+        ctx.fillStyle = color;
+        ctx.fillText(text, px, py + 14);
+      });
+      ctx.restore();
+    }
+  };
+
   chart = new Chart(document.getElementById('trajChart'), {
     type: 'scatter',
     data: { datasets: [] },
+    plugins: [courtLabelsPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
       plugins: { legend: { display: false } },
+      layout: { padding: { bottom: 20 } },
       scales: {
         x: {
-          title: { display: true, text: 'Distance (m)', color: '#FFC107', font: { size: 12 } },
+          title: { display: true, text: 'Absolute distance from your baseline (m)', color: '#FFC107', font: { size: 12 } },
           grid:  { color: 'rgba(255,255,255,.08)' },
           ticks: { color: '#a8c9b8' },
           min: 0
