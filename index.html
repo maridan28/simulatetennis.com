@@ -59,44 +59,6 @@
       100% { opacity: 0; }
     }
 
-    @keyframes courtSlideIn {
-      0% { transform: translateX(-100%); opacity: 0; }
-      100% { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes ballTrajectory {
-      0% { transform: translate(-500px, -300px) scale(1.5); opacity: 0; }
-      10% { opacity: 1; }
-      50% { transform: translate(200px, -150px) scale(1.2); }
-      90% { opacity: 1; }
-      100% { transform: translate(600px, 100px) scale(0.8); opacity: 0; }
-    }
-
-    @keyframes netSwing {
-      0% { transform: scaleY(0.8) rotateZ(-5deg); }
-      50% { transform: scaleY(1.1) rotateZ(5deg); }
-      100% { transform: scaleY(0.8) rotateZ(-5deg); }
-    }
-
-    @keyframes racketSwing {
-      0% { transform: rotateZ(-45deg) translateX(-100px); }
-      50% { transform: rotateZ(45deg) translateX(100px); }
-      100% { transform: rotateZ(-45deg) translateX(-100px); }
-    }
-
-    @keyframes courtLighting {
-      0% { filter: brightness(0.6); }
-      50% { filter: brightness(1.2); }
-      100% { filter: brightness(1); }
-    }
-
-    @keyframes floatParticle {
-      0% { transform: translateY(0) translateX(0); opacity: 0; }
-      10% { opacity: 0.8; }
-      90% { opacity: 0.8; }
-      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-    }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
@@ -106,7 +68,6 @@
       position: relative;
     }
 
-    /* INTRO OVERLAY */
     #introOverlay {
       position: fixed;
       top: 0;
@@ -131,152 +92,15 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-    }
-
-    .intro-particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #4CAF50;
-      border-radius: 50%;
-      opacity: 0.6;
-      animation: floatParticle 8s infinite;
-    }
-
-    .intro-court {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px;
-      height: 400px;
-      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
-      border: 3px solid #fff;
-      border-radius: 20px;
-      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
-      animation: courtSlideIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      opacity: 0;
-    }
-
-    .intro-court::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 100%;
-      background: #fff;
-      transform: translateX(-50%);
-      animation: courtLighting 3s ease-in-out infinite 1.5s;
-    }
-
-    .intro-court::after {
-      content: '';
-      position: absolute;
-      top: 25%;
-      left: 0;
-      width: 100%;
-      height: 50%;
-      border-top: 1px solid rgba(255, 255, 255, 0.5);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-      animation: courtLighting 3s ease-in-out infinite 1.5s;
-    }
-
-    .intro-net {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 150px;
-      height: 80px;
-      background: 
-        repeating-linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.3) 0px,
-          rgba(255, 255, 255, 0.3) 2px,
-          transparent 2px,
-          transparent 6px
-        ),
-        repeating-linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.3) 0px,
-          rgba(255, 255, 255, 0.3) 2px,
-          transparent 2px,
-          transparent 6px
-        );
-      border: 2px solid #fff;
-      border-radius: 10px;
-      animation: netSwing 1.5s ease-in-out 2s infinite, fadeIn 0.5s ease-out 2s forwards;
-      opacity: 0;
-    }
-
-    .intro-ball {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
-      border: 2px solid #fff;
-      border-radius: 50%;
-      top: -50px;
-      left: 100px;
-      box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6), 0 0 30px rgba(76, 175, 80, 0.4);
-      animation: ballTrajectory 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s;
-      opacity: 0;
-    }
-
-    .intro-racket {
-      position: absolute;
-      bottom: -100px;
-      left: 50px;
-      width: 80px;
-      height: 100px;
-      opacity: 0;
-      animation: fadeIn 0.3s ease-out 1s forwards;
-    }
-
-    .racket-head {
-      width: 80px;
-      height: 80px;
-      border: 4px solid #FFC107;
-      border-radius: 50%;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 193, 7, 0.2) 10px,
-        rgba(255, 193, 7, 0.2) 20px
-      );
-      margin: 0 auto;
-      animation: racketSwing 2s ease-in-out 1.5s infinite;
-      transform-origin: center bottom;
-    }
-
-    .racket-handle {
-      width: 12px;
-      height: 40px;
-      background: #8B7355;
-      margin: 0 auto;
-      border-radius: 6px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .intro-text {
-      position: absolute;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
       text-align: center;
       opacity: 0;
-      animation: fadeIn 0.8s ease-out 3.5s forwards;
+      animation: fadeIn 0.8s ease-out 1s forwards;
     }
 
     .intro-text h1 {
@@ -284,7 +108,7 @@
       font-weight: 900;
       color: #4CAF50;
       margin-bottom: 10px;
-      animation: glow 2s ease-in-out infinite 3.5s;
+      animation: glow 2s ease-in-out infinite 1s;
     }
 
     .intro-text p {
@@ -418,10 +242,6 @@
       transition: all 0.2s ease;
     }
 
-    input[type="range"]::-webkit-slider-thumb:active {
-      transform: scale(1.2);
-    }
-
     input[type="range"]::-moz-range-thumb {
       width: 20px;
       height: 20px;
@@ -430,7 +250,6 @@
       border: 3px solid #fff;
       cursor: pointer;
       box-shadow: 0 0 0 2px #4CAF50, 0 4px 12px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s ease;
     }
 
     input[type="number"] {
@@ -623,7 +442,6 @@
       cursor: crosshair;
     }
 
-    /* Court lines */
     .court-container::before {
       content: '';
       position: absolute;
@@ -636,31 +454,11 @@
       z-index: 2;
     }
 
-    .court-container::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.3) 25%, rgba(255, 255, 255, 0.3) 75%, transparent 75%),
-        repeating-linear-gradient(0deg, transparent 0px, transparent 32px, rgba(255, 255, 255, 0.2) 32px, rgba(255, 255, 255, 0.2) 64px);
-      z-index: 1;
-      pointer-events: none;
-    }
-
     .net-line {
       position: absolute;
       width: 100%;
       height: 4px;
-      background: repeating-linear-gradient(
-        90deg,
-        #fff 0px,
-        #fff 3px,
-        transparent 3px,
-        transparent 8px
-      );
+      background: repeating-linear-gradient(90deg, #fff 0px, #fff 3px, transparent 3px, transparent 8px);
       top: 50%;
       left: 0;
       transform: translateY(-50%);
@@ -677,13 +475,8 @@
       z-index: 2;
     }
 
-    .service-line.near {
-      top: 25%;
-    }
-
-    .service-line.far {
-      top: 75%;
-    }
+    .service-line.near { top: 25%; }
+    .service-line.far { top: 75%; }
 
     .baseline {
       position: absolute;
@@ -694,14 +487,8 @@
       z-index: 2;
     }
 
-    .baseline.near {
-      top: 0;
-    }
-
-    .baseline.far {
-      top: 100%;
-      transform: translateY(-100%);
-    }
+    .baseline.near { top: 0; }
+    .baseline.far { top: 100%; transform: translateY(-100%); }
 
     .launch-point {
       position: absolute;
@@ -713,13 +500,6 @@
       box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
       z-index: 10;
       animation: pulse 1s ease-in-out infinite;
-      cursor: grab;
-      cursor: -webkit-grab;
-    }
-
-    .launch-point:active {
-      cursor: grabbing;
-      cursor: -webkit-grabbing;
     }
 
     .landing-point {
@@ -731,24 +511,6 @@
       border-radius: 50%;
       box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
       z-index: 9;
-    }
-
-    .trajectory-line {
-      position: absolute;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(255, 107, 107, 0.2));
-      z-index: 8;
-      transform-origin: left;
-    }
-
-    .court-labels {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-      pointer-events: none;
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.5);
     }
 
     .table-section {
@@ -827,32 +589,16 @@
       .stats-section { grid-template-columns: repeat(2, 1fr); }
       .chart-container { height: 300px; }
       .court-container { height: 300px; }
-      .shot-type-buttons { flex-direction: column; }
-      .shot-btn { flex: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- INTRO ANIMATION -->
   <div id="introOverlay">
     <div class="intro-container">
-      <div class="intro-particles" id="particles"></div>
-      
-      <div class="intro-court">
-        <div class="intro-ball"></div>
-      </div>
-
-      <div class="intro-net"></div>
-
-      <div class="intro-racket">
-        <div class="racket-head"></div>
-        <div class="racket-handle"></div>
-      </div>
-
       <div class="intro-text">
         <h1><span class="ball-emoji">🎾</span> TENNIS PHYSICS</h1>
-        <p>Let's Calculate Your Perfect Shot</p>
+        <p>Click court to hit from that spot</p>
       </div>
     </div>
   </div>
@@ -863,7 +609,6 @@
       <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
     </header>
 
-    <!-- Controls -->
     <div class="controls-section">
       <div class="section-title">⚙️ Input Parameters</div>
       <div class="controls-grid">
@@ -874,7 +619,6 @@
               <input type="range" min="5" max="100" step="1" value="50" id="vel" />
               <input type="number" min="5" max="100" step="1" value="50" id="vel-input" />
             </div>
-            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
@@ -885,7 +629,6 @@
               <input type="range" min="-5" max="45" step="1" value="12" id="ang" />
               <input type="number" min="-5" max="45" step="1" value="12" id="ang-input" />
             </div>
-            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
@@ -896,7 +639,6 @@
               <input type="range" min="0.5" max="5" step="0.1" value="1.5" id="ht" />
               <input type="number" min="0.5" max="5" step="0.1" value="1.5" id="ht-input" />
             </div>
-            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
@@ -907,7 +649,6 @@
               <input type="range" min="-5000" max="5000" step="100" value="2500" id="spin" />
               <input type="number" min="-5000" max="5000" step="100" value="2500" id="spin-input" />
             </div>
-            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
 
@@ -918,13 +659,11 @@
               <input type="range" min="3" max="20" step="1" value="5" id="steps" />
               <input type="number" min="3" max="20" step="1" value="5" id="steps-input" />
             </div>
-            <small style="color: #8ab5a0; font-size: 11px;">Drag slider or type value</small>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Stats -->
     <div class="stats-section">
       <div class="stat-card">
         <div class="stat-label">📏 Range</div>
@@ -948,7 +687,6 @@
       </div>
     </div>
 
-    <!-- Chart -->
     <div class="chart-section">
       <div class="section-title">📊 Trajectory Visualization</div>
       <div class="chart-container">
@@ -961,25 +699,24 @@
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FF6B6B; border-top: 2px dashed #FF6B6B; height:0;"></div>
-          <span>Net</span>
+          <span>Net (11.89m)</span>
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FFC107;"></div>
-          <span>Service box</span>
+          <span>Service box (6.4m)</span>
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FF9800;"></div>
-          <span>Baseline</span>
+          <span>Baseline (23.77m)</span>
         </div>
       </div>
     </div>
 
-    <!-- TENNIS COURT VISUALIZATION -->
     <div class="court-section">
       <div class="section-title">🏟️ Interactive Tennis Court</div>
       
       <div class="court-info">
-        ✨ Click on the court to choose where you hit from • Use buttons to select shot direction
+        ✨ <strong>Click</strong> anywhere on the court to choose where you hit from • Green = launch point • Red = landing point
       </div>
 
       <div class="shot-type-buttons">
@@ -997,11 +734,9 @@
         
         <div class="launch-point" id="launchPoint"></div>
         <div class="landing-point" id="landingPoint"></div>
-        <div class="trajectory-line" id="trajectoryLine"></div>
       </div>
     </div>
 
-    <!-- Table -->
     <div class="table-section">
       <div class="section-title">📋 Step-by-Step Trajectory Data</div>
       <table>
@@ -1015,81 +750,34 @@
         </thead>
         <tbody id="tbl">
           <tr>
-            <td colspan="4" style="text-align: center; color: #888;">Calculating...</td>
+            <td colspan="4" style="text-align: center; color: #888;">Click court to start</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <footer>
-      <strong>Physics Constants:</strong> Drag coefficient = 0.507 | Mass = 0.056 kg | Radius = 0.0327 m | Lift coefficient = 0.25
-      <br>
-      <strong>Author:</strong> Adrian Marin — Created with ❤️
+      <strong>Physics:</strong> Drag = 0.507 | Mass = 0.056kg | Radius = 0.0327m
     </footer>
   </div>
 
   <script>
-    // ════════════════════════════════════════════════════════════════════════
-    // COURT INTERACTION
-    // ════════════════════════════════════════════════════════════════════════
-    let selectedShot = 'center';
-    let launchX = 50; // percentage
-    let launchY = 90; // percentage (near baseline)
-
-    document.querySelectorAll('.shot-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedShot = btn.dataset.shot;
-        update();
-      });
-    });
-
-    const courtContainer = document.getElementById('courtContainer');
-    const launchPoint = document.getElementById('launchPoint');
-
-    courtContainer.addEventListener('click', (e) => {
-      const rect = courtContainer.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      launchX = Math.max(0, Math.min(100, x));
-      launchY = Math.max(0, Math.min(100, y));
-
-      launchPoint.style.left = launchX + '%';
-      launchPoint.style.top = launchY + '%';
-      launchPoint.style.transform = 'translate(-50%, -50%)';
-
-      update();
-    });
-
-    // ════════════════════════════════════════════════════════════════════════
-    // GENERATE INTRO PARTICLES
-    // ════════════════════════════════════════════════════════════════════════
     function generateParticles() {
-      const container = document.getElementById('particles');
-      if (!container) return;
-
-      for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animation = `floatParticle ${5 + Math.random() * 5}s ease-in-out ${Math.random() * 2}s infinite`;
-        container.appendChild(particle);
-      }
+      const styles = document.createElement('style');
+      styles.innerHTML = `@keyframes floatParticle {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+      }`;
+      document.head.appendChild(styles);
     }
 
     generateParticles();
-
-    // Hide intro after 10 seconds
     setTimeout(() => {
       document.getElementById('introOverlay').classList.add('hidden');
-    }, 10000);
+    }, 5000);
 
-    // ════════════════════════════════════════════════════════════════════════
-    // PHYSICS CONSTANTS
-    // ════════════════════════════════════════════════════════════════════════
     const GRAVITY = -9.81;
     const AIR_DENSITY = 1.225;
     const DRAG_COEFF = 0.507;
@@ -1102,48 +790,14 @@
     const DRAG_CONSTANT = 0.5 * AIR_DENSITY * DRAG_COEFF * AREA / BALL_MASS;
     const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF * AREA / BALL_MASS;
 
+    let selectedShot = 'center';
+    let courtClickX = null;
+    let courtClickY = null;
+
     function round2(n) {
       return Math.round(n * 100) / 100;
     }
 
-    function animateValue(element, newValue, duration = 500) {
-      const isString = typeof newValue === 'string' || isNaN(newValue);
-
-      if (isString) {
-        element.textContent = newValue;
-        element.classList.add('updating');
-        setTimeout(() => element.classList.remove('updating'), 600);
-        return;
-      }
-
-      const oldValue = parseFloat(element.textContent) || 0;
-      element.classList.add('updating');
-
-      const startTime = Date.now();
-      const diff = newValue - oldValue;
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = progress < 0.5 
-          ? 2 * progress * progress 
-          : -1 + (4 - 2 * progress) * progress;
-
-        const currentValue = oldValue + diff * easeProgress;
-        element.textContent = round2(currentValue);
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          element.classList.remove('updating');
-        }
-      };
-      requestAnimationFrame(animate);
-    }
-
-    // ════════════════════════════════════════════════════════════════════════
-    // SIMULATION ENGINE
-    // ════════════════════════════════════════════════════════════════════════
     function simulate(initVel, angleDeg, initHeight, omega) {
       const angle = (angleDeg * Math.PI) / 180;
       let vx = initVel * Math.cos(angle);
@@ -1181,10 +835,7 @@
       let vy = initVel * Math.sin(angle);
       const printInterval = totalTime / steps;
       let nextPrint = printInterval;
-      let x = 0;
-      let y = initHeight;
-      let t = 0;
-      let step = 0;
+      let x = 0, y = initHeight, t = 0, step = 0;
       const rows = [{ step: 0, x: 0, y: initHeight, t: 0 }];
 
       while (y >= 0 && step < steps && t < 30) {
@@ -1202,155 +853,108 @@
 
         if (t >= nextPrint - DT / 2) {
           step++;
-          rows.push({ 
-            step, 
-            x: round2(x), 
-            y: round2(y), 
-            t: round2(t) 
-          });
+          rows.push({ step, x: round2(x), y: round2(y), t: round2(t) });
           nextPrint += printInterval;
         }
       }
-
       return rows;
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    // CHART SETUP
-    // ════════════════════════════════════════════════════════════════════════
     let chart = null;
-    
+
     function initChart() {
       const ctx = document.getElementById('trajChart');
       if (!ctx) return;
-
       chart = new Chart(ctx, {
         type: 'scatter',
         data: { datasets: [] },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { duration: 800 },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(26, 71, 42, 0.95)',
-              titleColor: '#FFC107',
-              bodyColor: '#d4e8df',
-              borderColor: 'rgba(76, 175, 80, 0.5)',
-              borderWidth: 2,
-              padding: 14
-            }
-          },
+          animation: { duration: 600 },
+          plugins: { legend: { display: false } },
           scales: {
-            x: {
-              title: { display: true, text: 'Distance (m)', color: '#FFC107' },
-              grid: { color: 'rgba(76, 175, 80, 0.1)' },
-              ticks: { color: '#a8c9b8' },
-              min: 0
-            },
-            y: {
-              title: { display: true, text: 'Height (m)', color: '#FFC107' },
-              grid: { color: 'rgba(76, 175, 80, 0.1)' },
-              ticks: { color: '#a8c9b8' },
-              min: 0
-            }
+            x: { title: { display: true, text: 'Distance (m)', color: '#FFC107' }, min: 0 },
+            y: { title: { display: true, text: 'Height (m)', color: '#FFC107' }, min: 0 }
           }
         }
       });
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    // MAIN UPDATE FUNCTION
-    // ════════════════════════════════════════════════════════════════════════
+    function animateValue(element, newValue, duration = 400) {
+      const isString = typeof newValue === 'string' || isNaN(newValue);
+      if (isString) {
+        element.textContent = newValue;
+        return;
+      }
+      const oldValue = parseFloat(element.textContent) || 0;
+      const diff = newValue - oldValue;
+      const startTime = Date.now();
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        element.textContent = round2(oldValue + diff * progress);
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    }
+
     function update() {
-      try {
-        const initVel = parseFloat(document.getElementById('vel').value);
-        let angleDeg = parseFloat(document.getElementById('ang').value);
-        const initHeight = parseFloat(document.getElementById('ht').value);
-        const spinRPM = parseFloat(document.getElementById('spin').value);
-        const steps = parseInt(document.getElementById('steps').value);
-        const omega = spinRPM * (2 * Math.PI / 60);
+      if (courtClickX === null) return;
 
-        // Adjust angle based on shot type
-        if (selectedShot === 'crosscourt') {
-          angleDeg += 15;
-        } else if (selectedShot === 'downline') {
-          angleDeg -= 10;
-        }
+      const initVel = parseFloat(document.getElementById('vel').value);
+      let angleDeg = parseFloat(document.getElementById('ang').value);
+      const initHeight = parseFloat(document.getElementById('ht').value);
+      const spinRPM = parseFloat(document.getElementById('spin').value);
+      const steps = parseInt(document.getElementById('steps').value);
+      const omega = spinRPM * (2 * Math.PI / 60);
 
-        const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
-        const finalX = round2(pts[pts.length - 1].x);
+      // Minimal angle adjustments for shot types
+      if (selectedShot === 'crosscourt') angleDeg += 3;
+      else if (selectedShot === 'downline') angleDeg -= 3;
 
-        animateValue(document.getElementById('s-range'), finalX);
-        animateValue(document.getElementById('s-height'), maxY);
-        animateValue(document.getElementById('s-time'), totalTime);
+      const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
+      const finalX = pts[pts.length - 1].x;
 
-        const spinType = spinRPM > 200 ? '🎾 Topspin' : spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
-        animateValue(document.getElementById('s-spin'), spinType);
+      animateValue(document.getElementById('s-range'), finalX);
+      animateValue(document.getElementById('s-height'), maxY);
+      animateValue(document.getElementById('s-time'), totalTime);
 
-        const skip = Math.max(1, Math.floor(pts.length / 300));
-        const chartPts = pts
-          .filter((_, i) => i % skip === 0)
-          .map(p => ({ x: round2(p.x), y: round2(p.y) }));
+      const spinType = spinRPM > 200 ? '🎾 Topspin' : spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
+      animateValue(document.getElementById('s-spin'), spinType);
 
-        const xMax = Math.max(finalX * 1.05, 13);
-        const netPts = [{ x: 11.89, y: 0 }, { x: 11.89, y: 1.2 }];
-        const svcPts = [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.01 }];
-        const basePts = [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.01 }];
+      const skip = Math.max(1, Math.floor(pts.length / 300));
+      const chartPts = pts.filter((_, i) => i % skip === 0).map(p => ({ x: round2(p.x), y: round2(p.y) }));
 
-        if (chart) {
-          chart.data.datasets = [
-            { label: 'Ball', data: chartPts, showLine: true, borderColor: '#4CAF50', backgroundColor: '#4CAF50', pointRadius: 0, borderWidth: 3, tension: 0.4, fill: false },
-            { label: 'Net', data: netPts, showLine: true, borderColor: '#FF6B6B', pointRadius: 0, borderWidth: 2, borderDash: [5, 5], fill: false },
-            { label: 'Service', data: svcPts, showLine: true, borderColor: '#FFC107', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false },
-            { label: 'Baseline', data: basePts, showLine: true, borderColor: '#FF9800', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false }
-          ];
-          chart.options.scales.x.max = xMax;
-          chart.update();
-        }
-
-        // Update court visualization
-        updateCourtVisualization(finalX);
-
-        // Update table
-        const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
-        const tbl = document.getElementById('tbl');
-        if (tbl) {
-          tbl.innerHTML = rows.map((row, idx) => `<tr${idx === 0 ? ' class="active"' : ''}><td>${row.step}</td><td>${row.x}</td><td>${row.y}</td><td>${row.t}</td></tr>`).join('');
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      if (chart) {
+        chart.data.datasets = [
+          { label: 'Ball', data: chartPts, showLine: true, borderColor: '#4CAF50', pointRadius: 0, borderWidth: 3, tension: 0.4, fill: false },
+          { label: 'Net', data: [{ x: 11.89, y: 0 }, { x: 11.89, y: 1.2 }], showLine: true, borderColor: '#FF6B6B', pointRadius: 0, borderWidth: 2, borderDash: [5, 5], fill: false },
+          { label: 'Service', data: [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.01 }], showLine: true, borderColor: '#FFC107', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false },
+          { label: 'Baseline', data: [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.01 }], showLine: true, borderColor: '#FF9800', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false }
+        ];
+        chart.options.scales.x.max = Math.max(finalX * 1.1, 15);
+        chart.update();
       }
-    }
 
-    function updateCourtVisualization(finalX) {
-      const maxDistance = 26;
-      const landingPercentage = Math.min((finalX / maxDistance) * 100, 95);
-      const landingPoint = document.getElementById('landingPoint');
-      const trajectoryLine = document.getElementById('trajectoryLine');
+      // Update court landing point
+      const courtContainer = document.getElementById('courtContainer');
+      const courtWidth = courtContainer.offsetWidth;
+      const courtHeight = courtContainer.offsetHeight;
+      const landingPointPercent = Math.min((finalX / 26) * 100, 100);
       
-      let targetX = launchX;
-      if (selectedShot === 'crosscourt') {
-        targetX = Math.min(100, launchX + 20);
-      } else if (selectedShot === 'downline') {
-        targetX = Math.max(0, launchX - 15);
+      document.getElementById('landingPoint').style.left = (landingPointPercent / 100 * courtWidth) + 'px';
+      document.getElementById('landingPoint').style.top = '50px'; // Near top (opponent side)
+
+      // Update table
+      const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
+      const tbl = document.getElementById('tbl');
+      if (tbl) {
+        tbl.innerHTML = rows.map((row, idx) => `<tr${idx === 0 ? ' class="active"' : ''}><td>${row.step}</td><td>${row.x}</td><td>${row.y}</td><td>${row.t}</td></tr>`).join('');
       }
-
-      landingPoint.style.left = targetX + '%';
-      landingPoint.style.top = '5%';
-      landingPoint.style.transform = 'translate(-50%, -50%)';
-
-      trajectoryLine.style.left = launchX + '%';
-      trajectoryLine.style.top = launchY + '%';
-      trajectoryLine.style.width = Math.abs(targetX - launchX) + '%';
-      trajectoryLine.style.height = Math.abs(5 - launchY) + '%';
-      trajectoryLine.style.transform = 'translate(0, -50%)';
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    // SYNCHRONIZATION ENGINE
-    // ════════════════════════════════════════════════════════════════════════
     function syncControls() {
       const controls = [
         { slider: 'vel', input: 'vel-input', min: 5, max: 100 },
@@ -1363,7 +967,6 @@
       controls.forEach(ctrl => {
         const sliderElem = document.getElementById(ctrl.slider);
         const inputElem = document.getElementById(ctrl.input);
-
         if (!sliderElem || !inputElem) return;
 
         sliderElem.addEventListener('input', (e) => {
@@ -1378,25 +981,35 @@
           inputElem.value = value;
           update();
         });
-
-        inputElem.addEventListener('blur', (e) => {
-          let value = parseFloat(e.target.value);
-          if (isNaN(value)) value = parseFloat(sliderElem.value);
-          value = Math.max(ctrl.min, Math.min(ctrl.max, value));
-          sliderElem.value = value;
-          inputElem.value = value;
-          update();
-        });
       });
     }
 
-    // Initialize
+    // Court click handler
+    document.getElementById('courtContainer').addEventListener('click', (e) => {
+      const rect = document.getElementById('courtContainer').getBoundingClientRect();
+      courtClickX = (e.clientX - rect.left) / rect.width * 26; // 26m court length
+      courtClickY = (e.clientY - rect.top) / rect.height;
+
+      const launchPoint = document.getElementById('launchPoint');
+      launchPoint.style.left = (e.clientX - rect.left) + 'px';
+      launchPoint.style.top = (e.clientY - rect.top) + 'px';
+      launchPoint.style.transform = 'translate(-50%, -50%)';
+
+      update();
+    });
+
+    // Shot type buttons
+    document.querySelectorAll('.shot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedShot = btn.dataset.shot;
+        update();
+      });
+    });
+
     initChart();
     syncControls();
-    launchPoint.style.left = launchX + '%';
-    launchPoint.style.top = launchY + '%';
-    launchPoint.style.transform = 'translate(-50%, -50%)';
-    update();
   </script>
 
 </body>
