@@ -53,57 +53,10 @@
       50% { text-shadow: 0 0 20px rgba(255, 193, 7, 0.6), 0 0 40px rgba(76, 175, 80, 0.4); }
     }
 
-    @keyframes courtSlideIn {
-      0% { transform: translateX(-100%); opacity: 0; }
-      100% { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes ballTrajectory {
-      0% { transform: translate(-500px, -300px) scale(1.5); opacity: 0; }
-      10% { opacity: 1; }
-      50% { transform: translate(200px, -150px) scale(1.2); }
-      90% { opacity: 1; }
-      100% { transform: translate(600px, 100px) scale(0.8); opacity: 0; }
-    }
-
-    @keyframes netSwing {
-      0% { transform: scaleY(0.8) rotateZ(-5deg); }
-      50% { transform: scaleY(1.1) rotateZ(5deg); }
-      100% { transform: scaleY(0.8) rotateZ(-5deg); }
-    }
-
-    @keyframes racketSwing {
-      0% { transform: rotateZ(-45deg) translateX(-100px); }
-      50% { transform: rotateZ(45deg) translateX(100px); }
-      100% { transform: rotateZ(-45deg) translateX(-100px); }
-    }
-
-    @keyframes courtLighting {
-      0% { filter: brightness(0.6); }
-      50% { filter: brightness(1.2); }
-      100% { filter: brightness(1); }
-    }
-
     @keyframes fadeOutOverlay {
       0% { opacity: 1; }
       90% { opacity: 1; }
       100% { opacity: 0; }
-    }
-
-    @keyframes passwordPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes splashAnimation {
-      0% { opacity: 0; transform: scale(0.5) rotateZ(0deg); }
-      50% { opacity: 1; transform: scale(1.2) rotateZ(180deg); }
-      100% { opacity: 0; transform: scale(0.8) rotateZ(360deg); }
-    }
-
-    @keyframes splashIn {
-      0% { opacity: 0; transform: translateY(100px) scale(0); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     body {
@@ -113,55 +66,6 @@
       min-height: 100vh;
       padding: 2rem 1rem;
       position: relative;
-    }
-
-    /* SPLASH SCREEN ANIMATION */
-    #splashScreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
-      z-index: 10001;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeOutOverlay 5s ease-out forwards;
-    }
-
-    .splash-container {
-      text-align: center;
-      animation: splashIn 1s ease-out;
-    }
-
-    .splash-ball {
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
-      border: 3px solid #fff;
-      border-radius: 50%;
-      margin: 0 auto 30px;
-      box-shadow: 0 8px 40px rgba(255, 193, 7, 0.8), 0 0 50px rgba(76, 175, 80, 0.6);
-      animation: ballSpin 2s linear infinite;
-    }
-
-    .splash-text h1 {
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: #4CAF50;
-      margin-bottom: 15px;
-      animation: titleGlow 3s ease-in-out infinite;
-      letter-spacing: 3px;
-    }
-
-    .splash-text p {
-      font-size: 1.5rem;
-      color: #FFC107;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      animation: glow 2s ease-in-out infinite 0.5s;
     }
 
     /* PASSWORD LOCK SCREEN */
@@ -176,8 +80,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(5px);
-      animation: fadeIn 0.5s ease-out;
+    }
+
+    #passwordOverlay.hidden {
+      display: none !important;
     }
 
     .password-container {
@@ -260,10 +166,10 @@
       color: #FF6B6B;
       font-size: 13px;
       margin-top: 10px;
-      animation: passwordPulse 0.5s ease-out;
       min-height: 20px;
     }
 
+    /* INTRO OVERLAY */
     #introOverlay {
       position: fixed;
       top: 0;
@@ -279,138 +185,24 @@
       pointer-events: none;
     }
 
+    #introOverlay.hidden {
+      display: none !important;
+    }
+
     .intro-container {
       position: relative;
       width: 100%;
       height: 100%;
       overflow: hidden;
-    }
-
-    .intro-court {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px;
-      height: 400px;
-      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
-      border: 3px solid #fff;
-      border-radius: 20px;
-      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
-      animation: courtSlideIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      opacity: 0;
-    }
-
-    .intro-court::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 100%;
-      background: #fff;
-      transform: translateX(-50%);
-      animation: courtLighting 3s ease-in-out infinite 1.5s;
-    }
-
-    .intro-court::after {
-      content: '';
-      position: absolute;
-      top: 25%;
-      left: 0;
-      width: 100%;
-      height: 50%;
-      border-top: 1px solid rgba(255, 255, 255, 0.5);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-      animation: courtLighting 3s ease-in-out infinite 1.5s;
-    }
-
-    .intro-net {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 150px;
-      height: 80px;
-      background: 
-        repeating-linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.3) 0px,
-          rgba(255, 255, 255, 0.3) 2px,
-          transparent 2px,
-          transparent 6px
-        ),
-        repeating-linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.3) 0px,
-          rgba(255, 255, 255, 0.3) 2px,
-          transparent 2px,
-          transparent 6px
-        );
-      border: 2px solid #fff;
-      border-radius: 10px;
-      animation: netSwing 1.5s ease-in-out 2s infinite, fadeIn 0.5s ease-out 2s forwards;
-      opacity: 0;
-    }
-
-    .intro-ball {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
-      border: 2px solid #fff;
-      border-radius: 50%;
-      top: -50px;
-      left: 100px;
-      box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6), 0 0 30px rgba(76, 175, 80, 0.4);
-      animation: ballTrajectory 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s;
-      opacity: 0;
-    }
-
-    .intro-racket {
-      position: absolute;
-      bottom: -100px;
-      left: 50px;
-      width: 80px;
-      height: 100px;
-      opacity: 0;
-      animation: fadeIn 0.3s ease-out 1s forwards;
-    }
-
-    .racket-head {
-      width: 80px;
-      height: 80px;
-      border: 4px solid #FFC107;
-      border-radius: 50%;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 193, 7, 0.2) 10px,
-        rgba(255, 193, 7, 0.2) 20px
-      );
-      margin: 0 auto;
-      animation: racketSwing 2s ease-in-out 1.5s infinite;
-      transform-origin: center bottom;
-    }
-
-    .racket-handle {
-      width: 12px;
-      height: 40px;
-      background: #8B7355;
-      margin: 0 auto;
-      border-radius: 6px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .intro-text {
-      position: absolute;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
       text-align: center;
       opacity: 0;
-      animation: fadeIn 0.8s ease-out 3.5s forwards;
+      animation: fadeIn 0.8s ease-out 1s forwards;
     }
 
     .intro-text h1 {
@@ -418,7 +210,7 @@
       font-weight: 900;
       color: #4CAF50;
       margin-bottom: 10px;
-      animation: glow 2s ease-in-out infinite 3.5s;
+      animation: glow 2s ease-in-out infinite 1s;
     }
 
     .intro-text p {
@@ -429,35 +221,13 @@
       text-transform: uppercase;
     }
 
-    .intro-particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #4CAF50;
-      border-radius: 50%;
-      opacity: 0.6;
-      animation: floatParticle 8s infinite;
-    }
-
-    @keyframes floatParticle {
-      0% { transform: translateY(0) translateX(0); opacity: 0; }
-      10% { opacity: 0.8; }
-      90% { opacity: 0.8; }
-      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-    }
-
     .container {
       max-width: 1100px;
       margin: 0 auto;
+    }
+
+    .container.hidden {
+      display: none !important;
     }
 
     header {
@@ -721,7 +491,6 @@
       border-radius: 1px;
     }
 
-    /* TENNIS COURT VISUALIZATION */
     .court-section {
       background: rgba(45, 90, 61, 0.6);
       border-radius: 18px;
@@ -743,7 +512,6 @@
       overflow: hidden;
     }
 
-    /* Court lines */
     .court-container::before {
       content: '';
       position: absolute;
@@ -766,13 +534,6 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     }
 
-    .court-label {
-      position: absolute;
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.6);
-      font-weight: 600;
-    }
-
     .net-line {
       position: absolute;
       width: 100%;
@@ -788,18 +549,6 @@
       left: 0;
       transform: translateY(-50%);
       z-index: 5;
-    }
-
-    .ball-marker {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
-      border: 2px solid #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
-      z-index: 10;
-      transition: all 0.3s ease;
     }
 
     .launch-point {
@@ -913,22 +662,11 @@
       .controls-grid { grid-template-columns: 1fr; }
       .stats-section { grid-template-columns: repeat(2, 1fr); }
       .chart-container { height: 300px; }
-      .intro-court { width: 90%; height: 300px; }
       .court-container { height: 200px; }
     }
   </style>
 </head>
 <body>
-  <!-- SPLASH SCREEN -->
-  <div id="splashScreen">
-    <div class="splash-container">
-      <div class="splash-ball"></div>
-      <div class="splash-text">
-        <h1>🎾 TENNIS</h1>
-        <p>Trajectory Simulator</p>
-      </div>
-    </div>
-  </div>
 
   <!-- PASSWORD PROTECTION -->
   <div id="passwordOverlay">
@@ -942,28 +680,15 @@
           placeholder="Enter password" 
           autocomplete="off"
         />
-        <button class="password-btn" onclick="checkPassword()">Enter</button>
+        <button class="password-btn" id="passwordBtn">Enter</button>
       </div>
       <div class="password-error" id="passwordError"></div>
     </div>
   </div>
 
-  <!-- EPIC INTRO ANIMATION -->
+  <!-- INTRO ANIMATION -->
   <div id="introOverlay">
     <div class="intro-container">
-      <div class="intro-particles" id="particles"></div>
-      
-      <div class="intro-court">
-        <div class="intro-ball"></div>
-      </div>
-
-      <div class="intro-net"></div>
-
-      <div class="intro-racket">
-        <div class="racket-head"></div>
-        <div class="racket-handle"></div>
-      </div>
-
       <div class="intro-text">
         <h1><span class="ball-emoji">🎾</span> TENNIS PHYSICS</h1>
         <p>Let's Calculate Your Perfect Shot</p>
@@ -971,7 +696,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="mainApp" class="hidden">
     <header>
       <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
       <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
@@ -1075,15 +800,15 @@
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FF6B6B; border-top: 2px dashed #FF6B6B; height:0;"></div>
-          <span>Net (0.91 m at 11.89 m)</span>
+          <span>Net</span>
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FFC107;"></div>
-          <span>Service box (6.4 m)</span>
+          <span>Service box</span>
         </div>
         <div class="legend-item">
           <div class="legend-line" style="background:#FF9800;"></div>
-          <span>Baseline (23.77 m)</span>
+          <span>Baseline</span>
         </div>
       </div>
     </div>
@@ -1092,10 +817,6 @@
     <div class="court-section">
       <div class="section-title">🏟️ Tennis Court Overview</div>
       <div class="court-container">
-        <div class="court-label" style="top: 10px; left: 20px;">↑ Initial Position</div>
-        <div class="court-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">NET</div>
-        <div class="court-label" style="bottom: 10px; right: 20px;">↑ Landing Point</div>
-        
         <div class="net-line"></div>
         <div class="launch-point"></div>
         <div class="landing-point" id="landingPoint"></div>
@@ -1124,7 +845,7 @@
     </div>
 
     <footer>
-      <strong>Physics Constants:</strong> Drag coefficient = 0.507 | Mass = 0.056 kg | Radius = 0.0327 m | Lift coefficient = 0.25 | Euler integration dt = 0.0001 s
+      <strong>Physics Constants:</strong> Drag coefficient = 0.507 | Mass = 0.056 kg | Radius = 0.0327 m | Lift coefficient = 0.25
       <br>
       <strong>Author:</strong> Adrian Marin — Created with ❤️
     </footer>
@@ -1132,7 +853,7 @@
 
   <script>
     // ════════════════════════════════════════════════════════════════════════
-    // PASSWORD PROTECTION
+    // PASSWORD PROTECTION - FIXED
     // ════════════════════════════════════════════════════════════════════════
     const CORRECT_PASSWORD = "Tennisisfun123$";
 
@@ -1141,38 +862,25 @@
       const errorDiv = document.getElementById('passwordError');
       
       if (input === CORRECT_PASSWORD) {
-        document.getElementById('passwordOverlay').style.display = 'none';
+        document.getElementById('passwordOverlay').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('introOverlay').classList.add('hidden');
+        }, 10000);
         errorDiv.textContent = '';
+        syncControls();
+        update();
       } else {
         errorDiv.textContent = '❌ Incorrect password. Try again!';
       }
     }
 
-    // Allow Enter key
+    document.getElementById('passwordBtn').addEventListener('click', checkPassword);
     document.getElementById('passwordInput').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         checkPassword();
       }
     });
-
-    // ════════════════════════════════════════════════════════════════════════
-    // GENERATE INTRO PARTICLES
-    // ════════════════════════════════════════════════════════════════════════
-    function generateParticles() {
-      const container = document.getElementById('particles');
-      if (!container) return;
-
-      for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animation = `floatParticle ${5 + Math.random() * 5}s ease-in-out ${Math.random() * 2}s infinite`;
-        container.appendChild(particle);
-      }
-    }
-
-    generateParticles();
 
     // ════════════════════════════════════════════════════════════════════════
     // PHYSICS CONSTANTS
@@ -1189,7 +897,6 @@
     const DRAG_CONSTANT = 0.5 * AIR_DENSITY * DRAG_COEFF * AREA / BALL_MASS;
     const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF * AREA / BALL_MASS;
 
-    // Helper functions
     function round2(n) {
       return Math.round(n * 100) / 100;
     }
@@ -1262,7 +969,6 @@
       return { pts, maxY, totalTime: t };
     }
 
-    // Generate table rows
     function getTableRows(initVel, angleDeg, initHeight, omega, steps) {
       const { totalTime } = simulate(initVel, angleDeg, initHeight, omega);
       const angle = (angleDeg * Math.PI) / 180;
@@ -1311,34 +1017,15 @@
     
     function initChart() {
       const ctx = document.getElementById('trajChart');
-      if (!ctx) {
-        console.error('Canvas element not found!');
-        return;
-      }
+      if (!ctx) return;
 
       chart = new Chart(ctx, {
         type: 'scatter',
-        data: {
-          datasets: [
-            {
-              label: 'Ball path',
-              data: [],
-              showLine: true,
-              borderColor: '#4CAF50',
-              backgroundColor: '#4CAF50',
-              pointRadius: 0,
-              borderWidth: 3,
-              tension: 0.4,
-              fill: false
-            }
-          ]
-        },
+        data: { datasets: [] },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: {
-            duration: 800
-          },
+          animation: { duration: 800 },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -1352,21 +1039,13 @@
           },
           scales: {
             x: {
-              title: { 
-                display: true, 
-                text: 'Horizontal distance (m)', 
-                color: '#FFC107' 
-              },
+              title: { display: true, text: 'Distance (m)', color: '#FFC107' },
               grid: { color: 'rgba(76, 175, 80, 0.1)' },
               ticks: { color: '#a8c9b8' },
               min: 0
             },
             y: {
-              title: { 
-                display: true, 
-                text: 'Height (m)', 
-                color: '#FFC107' 
-              },
+              title: { display: true, text: 'Height (m)', color: '#FFC107' },
               grid: { color: 'rgba(76, 175, 80, 0.1)' },
               ticks: { color: '#a8c9b8' },
               min: 0
@@ -1378,7 +1057,7 @@
 
     // ════════════════════════════════════════════════════════════════════════
     // MAIN UPDATE FUNCTION
-    // ════════════════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════════════════════════���═══
     function update() {
       try {
         const initVel = parseFloat(document.getElementById('vel').value);
@@ -1388,11 +1067,9 @@
         const steps = parseInt(document.getElementById('steps').value);
         const omega = spinRPM * (2 * Math.PI / 60);
 
-        // Run simulation
         const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
         const finalX = round2(pts[pts.length - 1].x);
 
-        // Update stat cards with values and units
         animateValue(document.getElementById('s-range'), finalX);
         animateValue(document.getElementById('s-height'), maxY);
         animateValue(document.getElementById('s-time'), totalTime);
@@ -1400,111 +1077,49 @@
         const spinType = spinRPM > 200 ? '🎾 Topspin' : spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
         animateValue(document.getElementById('s-spin'), spinType);
 
-        // Prepare chart data
         const skip = Math.max(1, Math.floor(pts.length / 300));
         const chartPts = pts
           .filter((_, i) => i % skip === 0)
           .map(p => ({ x: round2(p.x), y: round2(p.y) }));
 
-        // Court reference lines
         const xMax = Math.max(finalX * 1.05, 13);
         const netPts = [{ x: 11.89, y: 0 }, { x: 11.89, y: 1.2 }];
         const svcPts = [{ x: 6.4, y: 0 }, { x: 6.4, y: 0.01 }];
         const basePts = [{ x: 23.77, y: 0 }, { x: 23.77, y: 0.01 }];
 
-        // Update chart
         if (chart) {
           chart.data.datasets = [
-            {
-              label: 'Ball path',
-              data: chartPts,
-              showLine: true,
-              borderColor: '#4CAF50',
-              backgroundColor: '#4CAF50',
-              pointRadius: 0,
-              borderWidth: 3,
-              tension: 0.4,
-              fill: false
-            },
-            {
-              label: 'Net',
-              data: netPts,
-              showLine: true,
-              borderColor: '#FF6B6B',
-              pointRadius: 0,
-              borderWidth: 2,
-              borderDash: [5, 5],
-              fill: false
-            },
-            {
-              label: 'Service box',
-              data: svcPts,
-              showLine: true,
-              borderColor: '#FFC107',
-              pointRadius: 0,
-              borderWidth: 2,
-              borderDash: [4, 4],
-              fill: false
-            },
-            {
-              label: 'Baseline',
-              data: basePts,
-              showLine: true,
-              borderColor: '#FF9800',
-              pointRadius: 0,
-              borderWidth: 2,
-              borderDash: [4, 4],
-              fill: false
-            }
+            { label: 'Ball', data: chartPts, showLine: true, borderColor: '#4CAF50', backgroundColor: '#4CAF50', pointRadius: 0, borderWidth: 3, tension: 0.4, fill: false },
+            { label: 'Net', data: netPts, showLine: true, borderColor: '#FF6B6B', pointRadius: 0, borderWidth: 2, borderDash: [5, 5], fill: false },
+            { label: 'Service', data: svcPts, showLine: true, borderColor: '#FFC107', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false },
+            { label: 'Baseline', data: basePts, showLine: true, borderColor: '#FF9800', pointRadius: 0, borderWidth: 2, borderDash: [4, 4], fill: false }
           ];
-
           chart.options.scales.x.max = xMax;
           chart.update();
         }
 
-        // Update court visualization
+        // Update court
         updateCourtVisualization(finalX);
 
         // Update table
         const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps);
         const tbl = document.getElementById('tbl');
         if (tbl) {
-          tbl.innerHTML = rows
-            .map((row, idx) => `
-              <tr${idx === 0 ? ' class="active"' : ''}>
-                <td>${row.step}</td>
-                <td>${row.x}</td>
-                <td>${row.y}</td>
-                <td>${row.t}</td>
-              </tr>
-            `)
-            .join('');
+          tbl.innerHTML = rows.map((row, idx) => `<tr${idx === 0 ? ' class="active"' : ''}><td>${row.step}</td><td>${row.x}</td><td>${row.y}</td><td>${row.t}</td></tr>`).join('');
         }
       } catch (error) {
-        console.error('Update error:', error);
+        console.error('Error:', error);
       }
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    // COURT VISUALIZATION UPDATE
-    // ════════════════════════════════════════════════════════════════════════
     function updateCourtVisualization(finalX) {
-      const courtContainer = document.querySelector('.court-container');
-      const containerWidth = courtContainer.offsetWidth;
-      const maxDistance = 26; // approximately baseline
-      
-      // Calculate landing point position as percentage of court width
+      const maxDistance = 26;
       const landingPercentage = Math.min((finalX / maxDistance) * 100, 95);
-      
       const landingPoint = document.getElementById('landingPoint');
       const trajectoryLine = document.getElementById('trajectoryLine');
       
-      // Update landing point position
       landingPoint.style.left = (10 + (landingPercentage - 10) * 0.8) + '%';
-      
-      // Update trajectory line width
-      const trajectoryWidth = (landingPercentage - 10) * 0.8;
-      trajectoryLine.style.width = trajectoryWidth + '%';
+      trajectoryLine.style.width = ((landingPercentage - 10) * 0.8) + '%';
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -1525,37 +1140,34 @@
 
         if (!sliderElem || !inputElem) return;
 
-        // SLIDER → INPUT and UPDATE
         sliderElem.addEventListener('input', (e) => {
-          const value = parseFloat(e.target.value);
-          inputElem.value = value;
+          inputElem.value = parseFloat(e.target.value);
           update();
         });
 
-        // INPUT → SLIDER and UPDATE
         inputElem.addEventListener('input', (e) => {
           let value = parseFloat(e.target.value);
-          
-          // Clamp to min/max
           value = Math.max(ctrl.min, Math.min(ctrl.max, value));
-          
-          // Update both
           sliderElem.value = value;
           inputElem.value = value;
           update();
         });
 
-        // Handle focus out to ensure valid range
         inputElem.addEventListener('blur', (e) => {
           let value = parseFloat(e.target.value);
-          
-          // If empty or invalid, set to slider value
-          if (isNaN(value)) {
-            value = parseFloat(sliderElem.value);
-          }
-          
-          // Clamp to min/max
+          if (isNaN(value)) value = parseFloat(sliderElem.value);
           value = Math.max(ctrl.min, Math.min(ctrl.max, value));
-          
-          // Update both
           sliderElem.value = value;
+          inputElem.value = value;
+          update();
+        });
+      });
+    }
+
+    // Initialize chart on page load
+    initChart();
+    document.getElementById('passwordInput').focus();
+  </script>
+
+</body>
+</html>
