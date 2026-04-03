@@ -59,6 +59,44 @@
       100% { opacity: 0; }
     }
 
+    @keyframes courtSlideIn {
+      0% { transform: translateX(-100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes ballTrajectory {
+      0% { transform: translate(-500px, -300px) scale(1.5); opacity: 0; }
+      10% { opacity: 1; }
+      50% { transform: translate(200px, -150px) scale(1.2); }
+      90% { opacity: 1; }
+      100% { transform: translate(600px, 100px) scale(0.8); opacity: 0; }
+    }
+
+    @keyframes netSwing {
+      0% { transform: scaleY(0.8) rotateZ(-5deg); }
+      50% { transform: scaleY(1.1) rotateZ(5deg); }
+      100% { transform: scaleY(0.8) rotateZ(-5deg); }
+    }
+
+    @keyframes racketSwing {
+      0% { transform: rotateZ(-45deg) translateX(-100px); }
+      50% { transform: rotateZ(45deg) translateX(100px); }
+      100% { transform: rotateZ(-45deg) translateX(-100px); }
+    }
+
+    @keyframes courtLighting {
+      0% { filter: brightness(0.6); }
+      50% { filter: brightness(1.2); }
+      100% { filter: brightness(1); }
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
@@ -66,107 +104,6 @@
       min-height: 100vh;
       padding: 2rem 1rem;
       position: relative;
-    }
-
-    /* PASSWORD LOCK SCREEN */
-    #passwordOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #0d3b1a 0%, #1a5f2a 50%, #0d3b1a 100%);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #passwordOverlay.hidden {
-      display: none !important;
-    }
-
-    .password-container {
-      background: rgba(26, 71, 42, 0.95);
-      border: 2px solid rgba(76, 175, 80, 0.6);
-      border-radius: 20px;
-      padding: 3rem;
-      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
-      max-width: 400px;
-      width: 90%;
-      animation: slideUp 0.8s ease-out;
-      text-align: center;
-    }
-
-    .password-container h2 {
-      font-size: 2rem;
-      color: #4CAF50;
-      margin-bottom: 10px;
-      animation: titleGlow 4s ease-in-out infinite;
-    }
-
-    .password-container p {
-      color: #b8d4c4;
-      margin-bottom: 2rem;
-      font-size: 14px;
-    }
-
-    .password-input-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-    }
-
-    #passwordInput {
-      flex: 1;
-      padding: 12px 16px;
-      border: 2px solid rgba(76, 175, 80, 0.4);
-      border-radius: 10px;
-      background: rgba(26, 71, 42, 0.7);
-      color: #FFC107;
-      font-weight: 700;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    #passwordInput:focus {
-      outline: none;
-      border-color: rgba(255, 193, 7, 0.6);
-      box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
-    }
-
-    #passwordInput::placeholder {
-      color: rgba(255, 193, 7, 0.5);
-    }
-
-    .password-btn {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .password-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5);
-    }
-
-    .password-btn:active {
-      transform: translateY(0);
-    }
-
-    .password-error {
-      color: #FF6B6B;
-      font-size: 13px;
-      margin-top: 10px;
-      min-height: 20px;
     }
 
     /* INTRO OVERLAY */
@@ -194,15 +131,152 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
+
+    .intro-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #4CAF50;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatParticle 8s infinite;
+    }
+
+    .intro-court {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 400px;
+      background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
+      border: 3px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 60px rgba(76, 175, 80, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.4);
+      animation: courtSlideIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+
+    .intro-court::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background: #fff;
+      transform: translateX(-50%);
+      animation: courtLighting 3s ease-in-out infinite 1.5s;
+    }
+
+    .intro-court::after {
+      content: '';
+      position: absolute;
+      top: 25%;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      border-top: 1px solid rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      animation: courtLighting 3s ease-in-out infinite 1.5s;
+    }
+
+    .intro-net {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 80px;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.3) 0px,
+          rgba(255, 255, 255, 0.3) 2px,
+          transparent 2px,
+          transparent 6px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.3) 0px,
+          rgba(255, 255, 255, 0.3) 2px,
+          transparent 2px,
+          transparent 6px
+        );
+      border: 2px solid #fff;
+      border-radius: 10px;
+      animation: netSwing 1.5s ease-in-out 2s infinite, fadeIn 0.5s ease-out 2s forwards;
+      opacity: 0;
+    }
+
+    .intro-ball {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle at 30% 30%, #FFE082, #FFC107);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      top: -50px;
+      left: 100px;
+      box-shadow: 0 4px 20px rgba(255, 193, 7, 0.6), 0 0 30px rgba(76, 175, 80, 0.4);
+      animation: ballTrajectory 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s;
+      opacity: 0;
+    }
+
+    .intro-racket {
+      position: absolute;
+      bottom: -100px;
+      left: 50px;
+      width: 80px;
+      height: 100px;
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out 1s forwards;
+    }
+
+    .racket-head {
+      width: 80px;
+      height: 80px;
+      border: 4px solid #FFC107;
+      border-radius: 50%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 193, 7, 0.2) 10px,
+        rgba(255, 193, 7, 0.2) 20px
+      );
+      margin: 0 auto;
+      animation: racketSwing 2s ease-in-out 1.5s infinite;
+      transform-origin: center bottom;
+    }
+
+    .racket-handle {
+      width: 12px;
+      height: 40px;
+      background: #8B7355;
+      margin: 0 auto;
+      border-radius: 6px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
     }
 
     .intro-text {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
       opacity: 0;
-      animation: fadeIn 0.8s ease-out 1s forwards;
+      animation: fadeIn 0.8s ease-out 3.5s forwards;
     }
 
     .intro-text h1 {
@@ -210,7 +284,7 @@
       font-weight: 900;
       color: #4CAF50;
       margin-bottom: 10px;
-      animation: glow 2s ease-in-out infinite 1s;
+      animation: glow 2s ease-in-out infinite 3.5s;
     }
 
     .intro-text p {
@@ -224,10 +298,6 @@
     .container {
       max-width: 1100px;
       margin: 0 auto;
-    }
-
-    .container.hidden {
-      display: none !important;
     }
 
     header {
@@ -393,6 +463,39 @@
       -moz-appearance: textfield;
     }
 
+    .shot-type-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .shot-btn {
+      padding: 10px 16px;
+      background: rgba(76, 175, 80, 0.2);
+      border: 2px solid rgba(76, 175, 80, 0.4);
+      border-radius: 8px;
+      color: #a8c9b8;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .shot-btn:hover {
+      background: rgba(76, 175, 80, 0.3);
+      border-color: rgba(255, 193, 7, 0.6);
+    }
+
+    .shot-btn.active {
+      background: rgba(76, 175, 80, 0.8);
+      border-color: #FFC107;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+    }
+
     .stats-section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -501,17 +604,26 @@
       animation: slideUp 0.7s ease-out 0.2s backwards;
     }
 
+    .court-info {
+      font-size: 12px;
+      color: #b8d4c4;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
     .court-container {
       position: relative;
       width: 100%;
-      height: 300px;
+      height: 400px;
       background: linear-gradient(180deg, #2d5a3d 0%, #1a3a25 100%);
       border: 3px solid #fff;
       border-radius: 12px;
       margin-top: 1rem;
       overflow: hidden;
+      cursor: crosshair;
     }
 
+    /* Court lines */
     .court-container::before {
       content: '';
       position: absolute;
@@ -521,70 +633,122 @@
       height: 100%;
       background: #fff;
       transform: translateX(-50%);
+      z-index: 2;
     }
 
     .court-container::after {
       content: '';
       position: absolute;
-      top: 20%;
+      top: 0;
       left: 0;
       width: 100%;
-      height: 60%;
-      border-top: 1px solid rgba(255, 255, 255, 0.5);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      height: 100%;
+      background: 
+        linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.3) 25%, rgba(255, 255, 255, 0.3) 75%, transparent 75%),
+        repeating-linear-gradient(0deg, transparent 0px, transparent 32px, rgba(255, 255, 255, 0.2) 32px, rgba(255, 255, 255, 0.2) 64px);
+      z-index: 1;
+      pointer-events: none;
     }
 
     .net-line {
       position: absolute;
       width: 100%;
-      height: 3px;
+      height: 4px;
       background: repeating-linear-gradient(
         90deg,
         #fff 0px,
-        #fff 2px,
-        transparent 2px,
-        transparent 6px
+        #fff 3px,
+        transparent 3px,
+        transparent 8px
       );
       top: 50%;
       left: 0;
       transform: translateY(-50%);
       z-index: 5;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .service-line {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.6);
+      left: 0;
+      z-index: 2;
+    }
+
+    .service-line.near {
+      top: 25%;
+    }
+
+    .service-line.far {
+      top: 75%;
+    }
+
+    .baseline {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.8);
+      left: 0;
+      z-index: 2;
+    }
+
+    .baseline.near {
+      top: 0;
+    }
+
+    .baseline.far {
+      top: 100%;
+      transform: translateY(-100%);
     }
 
     .launch-point {
       position: absolute;
-      bottom: 20px;
-      left: 10%;
       width: 16px;
       height: 16px;
       background: #4CAF50;
       border: 3px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
-      z-index: 8;
+      z-index: 10;
       animation: pulse 1s ease-in-out infinite;
+      cursor: grab;
+      cursor: -webkit-grab;
+    }
+
+    .launch-point:active {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
     }
 
     .landing-point {
       position: absolute;
-      bottom: 20px;
       width: 14px;
       height: 14px;
       background: #FF6B6B;
       border: 3px solid #fff;
       border-radius: 50%;
       box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-      z-index: 8;
+      z-index: 9;
     }
 
     .trajectory-line {
       position: absolute;
-      bottom: 27px;
-      left: 10%;
       height: 2px;
       background: linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(255, 107, 107, 0.2));
+      z-index: 8;
       transform-origin: left;
-      z-index: 7;
+    }
+
+    .court-labels {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .table-section {
@@ -662,33 +826,30 @@
       .controls-grid { grid-template-columns: 1fr; }
       .stats-section { grid-template-columns: repeat(2, 1fr); }
       .chart-container { height: 300px; }
-      .court-container { height: 200px; }
+      .court-container { height: 300px; }
+      .shot-type-buttons { flex-direction: column; }
+      .shot-btn { flex: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- PASSWORD PROTECTION -->
-  <div id="passwordOverlay">
-    <div class="password-container">
-      <h2>🔐 Access Required</h2>
-      <p>Enter the password to access the Tennis Simulator</p>
-      <div class="password-input-group">
-        <input 
-          type="password" 
-          id="passwordInput" 
-          placeholder="Enter password" 
-          autocomplete="off"
-        />
-        <button class="password-btn" id="passwordBtn">Enter</button>
-      </div>
-      <div class="password-error" id="passwordError"></div>
-    </div>
-  </div>
-
   <!-- INTRO ANIMATION -->
   <div id="introOverlay">
     <div class="intro-container">
+      <div class="intro-particles" id="particles"></div>
+      
+      <div class="intro-court">
+        <div class="intro-ball"></div>
+      </div>
+
+      <div class="intro-net"></div>
+
+      <div class="intro-racket">
+        <div class="racket-head"></div>
+        <div class="racket-handle"></div>
+      </div>
+
       <div class="intro-text">
         <h1><span class="ball-emoji">🎾</span> TENNIS PHYSICS</h1>
         <p>Let's Calculate Your Perfect Shot</p>
@@ -696,7 +857,7 @@
     </div>
   </div>
 
-  <div class="container" id="mainApp" class="hidden">
+  <div class="container" id="mainApp">
     <header>
       <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
       <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
@@ -815,10 +976,26 @@
 
     <!-- TENNIS COURT VISUALIZATION -->
     <div class="court-section">
-      <div class="section-title">🏟️ Tennis Court Overview</div>
-      <div class="court-container">
+      <div class="section-title">🏟️ Interactive Tennis Court</div>
+      
+      <div class="court-info">
+        ✨ Click on the court to choose where you hit from • Use buttons to select shot direction
+      </div>
+
+      <div class="shot-type-buttons">
+        <button class="shot-btn active" data-shot="center">📍 Center</button>
+        <button class="shot-btn" data-shot="crosscourt">↗️ Cross Court</button>
+        <button class="shot-btn" data-shot="downline">↑ Down The Line</button>
+      </div>
+
+      <div class="court-container" id="courtContainer">
+        <div class="baseline near"></div>
+        <div class="service-line near"></div>
+        <div class="service-line far"></div>
+        <div class="baseline far"></div>
         <div class="net-line"></div>
-        <div class="launch-point"></div>
+        
+        <div class="launch-point" id="launchPoint"></div>
         <div class="landing-point" id="landingPoint"></div>
         <div class="trajectory-line" id="trajectoryLine"></div>
       </div>
@@ -853,34 +1030,62 @@
 
   <script>
     // ════════════════════════════════════════════════════════════════════════
-    // PASSWORD PROTECTION - FIXED
+    // COURT INTERACTION
     // ════════════════════════════════════════════════════════════════════════
-    const CORRECT_PASSWORD = "Tennisisfun123$";
+    let selectedShot = 'center';
+    let launchX = 50; // percentage
+    let launchY = 90; // percentage (near baseline)
 
-    function checkPassword() {
-      const input = document.getElementById('passwordInput').value;
-      const errorDiv = document.getElementById('passwordError');
-      
-      if (input === CORRECT_PASSWORD) {
-        document.getElementById('passwordOverlay').classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('introOverlay').classList.add('hidden');
-        }, 10000);
-        errorDiv.textContent = '';
-        syncControls();
+    document.querySelectorAll('.shot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.shot-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedShot = btn.dataset.shot;
         update();
-      } else {
-        errorDiv.textContent = '❌ Incorrect password. Try again!';
+      });
+    });
+
+    const courtContainer = document.getElementById('courtContainer');
+    const launchPoint = document.getElementById('launchPoint');
+
+    courtContainer.addEventListener('click', (e) => {
+      const rect = courtContainer.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      launchX = Math.max(0, Math.min(100, x));
+      launchY = Math.max(0, Math.min(100, y));
+
+      launchPoint.style.left = launchX + '%';
+      launchPoint.style.top = launchY + '%';
+      launchPoint.style.transform = 'translate(-50%, -50%)';
+
+      update();
+    });
+
+    // ════════════════════════════════════════════════════════════════════════
+    // GENERATE INTRO PARTICLES
+    // ════════════════════════════════════════════════════════════════════════
+    function generateParticles() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animation = `floatParticle ${5 + Math.random() * 5}s ease-in-out ${Math.random() * 2}s infinite`;
+        container.appendChild(particle);
       }
     }
 
-    document.getElementById('passwordBtn').addEventListener('click', checkPassword);
-    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        checkPassword();
-      }
-    });
+    generateParticles();
+
+    // Hide intro after 10 seconds
+    setTimeout(() => {
+      document.getElementById('introOverlay').classList.add('hidden');
+    }, 10000);
 
     // ════════════════════════════════════════════════════════════════════════
     // PHYSICS CONSTANTS
@@ -1057,15 +1262,22 @@
 
     // ════════════════════════════════════════════════════════════════════════
     // MAIN UPDATE FUNCTION
-    // ════════════════════════════════════════════════════════════════════���═══
+    // ════════════════════════════════════════════════════════════════════════
     function update() {
       try {
         const initVel = parseFloat(document.getElementById('vel').value);
-        const angleDeg = parseFloat(document.getElementById('ang').value);
+        let angleDeg = parseFloat(document.getElementById('ang').value);
         const initHeight = parseFloat(document.getElementById('ht').value);
         const spinRPM = parseFloat(document.getElementById('spin').value);
         const steps = parseInt(document.getElementById('steps').value);
         const omega = spinRPM * (2 * Math.PI / 60);
+
+        // Adjust angle based on shot type
+        if (selectedShot === 'crosscourt') {
+          angleDeg += 15;
+        } else if (selectedShot === 'downline') {
+          angleDeg -= 10;
+        }
 
         const { pts, maxY, totalTime } = simulate(initVel, angleDeg, initHeight, omega);
         const finalX = round2(pts[pts.length - 1].x);
@@ -1098,7 +1310,7 @@
           chart.update();
         }
 
-        // Update court
+        // Update court visualization
         updateCourtVisualization(finalX);
 
         // Update table
@@ -1118,8 +1330,22 @@
       const landingPoint = document.getElementById('landingPoint');
       const trajectoryLine = document.getElementById('trajectoryLine');
       
-      landingPoint.style.left = (10 + (landingPercentage - 10) * 0.8) + '%';
-      trajectoryLine.style.width = ((landingPercentage - 10) * 0.8) + '%';
+      let targetX = launchX;
+      if (selectedShot === 'crosscourt') {
+        targetX = Math.min(100, launchX + 20);
+      } else if (selectedShot === 'downline') {
+        targetX = Math.max(0, launchX - 15);
+      }
+
+      landingPoint.style.left = targetX + '%';
+      landingPoint.style.top = '5%';
+      landingPoint.style.transform = 'translate(-50%, -50%)';
+
+      trajectoryLine.style.left = launchX + '%';
+      trajectoryLine.style.top = launchY + '%';
+      trajectoryLine.style.width = Math.abs(targetX - launchX) + '%';
+      trajectoryLine.style.height = Math.abs(5 - launchY) + '%';
+      trajectoryLine.style.transform = 'translate(0, -50%)';
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -1164,9 +1390,13 @@
       });
     }
 
-    // Initialize chart on page load
+    // Initialize
     initChart();
-    document.getElementById('passwordInput').focus();
+    syncControls();
+    launchPoint.style.left = launchX + '%';
+    launchPoint.style.top = launchY + '%';
+    launchPoint.style.transform = 'translate(-50%, -50%)';
+    update();
   </script>
 
 </body>
