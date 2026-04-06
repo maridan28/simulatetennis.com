@@ -155,7 +155,6 @@
       box-shadow: 0 0 12px rgba(255,193,7,.25);
     }
 
-    /* hit-position highlight strip */
     .hit-position-card {
       background: rgba(76,175,80,.18);
       border-color: rgba(255,193,7,.5);
@@ -163,11 +162,14 @@
 
     .stats-section {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
+      grid-template-columns: repeat(5, minmax(0,1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
+      .stats-section { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+    @media (max-width: 450px) {
       .stats-section { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
     .stat-card {
@@ -184,7 +186,7 @@
       border-color: rgba(255,193,7,.6);
     }
     .stat-label { font-size: .7rem; font-weight: 700; color: #a8c9b8; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
-    .stat-value { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 900; color: #4CAF50; min-height: 2rem; word-break: break-all; }
+    .stat-value { font-size: clamp(1rem, 3vw, 1.75rem); font-weight: 900; color: #4CAF50; min-height: 2rem; word-break: break-all; }
     .stat-unit  { font-size: .75rem; color: #FFC107; font-weight: 600; margin-top: 4px; }
 
     .net-status {
@@ -239,6 +241,7 @@
     tbody tr { transition: background .2s; }
     tbody tr:hover { background: rgba(76,175,80,.15); }
     tbody tr.active { animation: rowHighlight .8s ease-in-out; }
+    tbody tr.bounce-row td { color: #FFB74D; }
 
     footer {
       margin-top: 2rem;
@@ -256,10 +259,10 @@
 
   <header>
     <h1><span class="ball-emoji">🎾</span> Tennis Ball Trajectory Simulator</h1>
-    <p class="subtitle">Physics-based simulation with drag and Magnus (spin) effect</p>
+    <p class="subtitle">Physics-based simulation with drag, Magnus (spin) effect, and bounce</p>
   </header>
 
-  <!-- Hit position (prominent separate card) -->
+  <!-- Hit position -->
   <div class="card hit-position-card">
     <div class="section-title">📍 Your Hit Position on Court</div>
     <div class="controls-grid">
@@ -309,6 +312,20 @@
         </div>
       </div>
       <div class="control-group">
+        <label class="control-label">Bounce Coefficient (COR) <span class="hint">0 = no bounce · 1 = perfect bounce</span></label>
+        <div class="slider-and-input">
+          <input type="range"  min="0"     max="0.95" step="0.01" value="0.75" id="cor">
+          <input type="number" min="0"     max="0.95" step="0.01" value="0.75" id="cor-input">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Max Bounces <span class="hint">how many bounces to simulate</span></label>
+        <div class="slider-and-input">
+          <input type="range"  min="0"     max="6"    step="1"   value="3"    id="bounces">
+          <input type="number" min="0"     max="6"    step="1"   value="3"    id="bounces-input">
+        </div>
+      </div>
+      <div class="control-group">
         <label class="control-label">Table Steps</label>
         <div class="slider-and-input">
           <input type="range"  min="3"     max="20"   step="1"   value="5"    id="steps">
@@ -336,6 +353,11 @@
       <div class="stat-unit">seconds</div>
     </div>
     <div class="stat-card">
+      <div class="stat-label">🔁 Bounces</div>
+      <div class="stat-value" id="s-bounces">—</div>
+      <div class="stat-unit">&nbsp;</div>
+    </div>
+    <div class="stat-card">
       <div class="stat-label">🌀 Spin Type</div>
       <div class="stat-value" id="s-spin">—</div>
       <div class="stat-unit">&nbsp;</div>
@@ -351,11 +373,12 @@
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:.75rem;">
       <div class="legend">
         <div class="legend-item"><div class="legend-line" style="background:#4CAF50;"></div>Ball path</div>
+        <div class="legend-item"><div class="legend-line" style="background:#FFB74D; border-top: 2px dashed #FFB74D; background: transparent;"></div>Bounces</div>
         <div class="legend-item"><div class="legend-line" style="background:#FF6B6B;"></div>Net (0.91 m)</div>
         <div class="legend-item"><div class="legend-line" style="background:#FFC107;"></div>Your service line</div>
-        <div class="legend-item"><div class="legend-line" style="background:#64B5F6;"></div>Opponent's service line</div>
+        <div class="legend-item"><div class="legend-line" style="background:#64B5F6;"></div>Opp. service line</div>
         <div class="legend-item"><div class="legend-line" style="background:#FF9800;"></div>Baselines</div>
-        <div class="legend-item"><div class="legend-line" style="background:#CE93D8; height:3px; border-top: 2px dashed #CE93D8; background: transparent;"></div>Hit position</div>
+        <div class="legend-item"><div class="legend-line" style="background: transparent; border-top: 2px dashed #CE93D8;"></div>Hit position</div>
       </div>
       <div id="net-status" class="net-status clear">✅ Clears net</div>
     </div>
@@ -367,7 +390,7 @@
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>Step</th><th>Abs. Distance (m)</th><th>From Hit Pos. (m)</th><th>Height (m)</th><th>Time (s)</th></tr>
+          <tr><th>Step</th><th>Abs. Distance (m)</th><th>From Hit Pos. (m)</th><th>Height (m)</th><th>Time (s)</th><th>Phase</th></tr>
         </thead>
         <tbody id="tbl"></tbody>
       </table>
@@ -379,16 +402,17 @@
     mass = 0.056 kg &nbsp;|&nbsp; radius = 0.0327 m &nbsp;|&nbsp;
     lift coefficient = 0.25 &nbsp;|&nbsp; Euler integration dt = 0.0001 s
     <br>
+    Bounce: COR applies to vertical velocity; horizontal speed reduced by 15% per bounce (surface friction); spin reduced 40% per bounce
+    <br>
     Net: 11.89 m from baseline, 0.91 m tall at centre &nbsp;|&nbsp;
-    Your service line: 6.4 m from your baseline &nbsp;|&nbsp;
-    Opponent's service line: 17.37 m from your baseline &nbsp;|&nbsp;
+    Your service line: 6.4 m &nbsp;|&nbsp;
+    Opponent's service line: 17.37 m &nbsp;|&nbsp;
     Baselines: 0 m &amp; 23.77 m
   </footer>
 
 </div>
 
 <script>
-  // ── Physics constants ─────────────────────────────────────────────────
   const GRAVITY         = -9.81;
   const AIR_DENSITY     = 1.225;
   const DRAG_COEFF      = 0.507;
@@ -400,29 +424,31 @@
   const DRAG_CONSTANT   = 0.5 * AIR_DENSITY * DRAG_COEFF  * AREA / BALL_MASS;
   const MAGNUS_CONSTANT = 0.5 * AIR_DENSITY * LIFT_COEFF  * AREA / BALL_MASS;
 
-  // ── Court dimensions (absolute, from YOUR baseline) ───────────────────
   const COURT_LENGTH          = 23.77;
-  const NET_X_ABS             = 11.89;  // net is at half-court
+  const NET_X_ABS             = 11.89;
   const NET_HEIGHT            = 0.91;
-  const YOUR_SERVICE_LINE_ABS = 6.4;    // 6.4 m in from your baseline
-  const OPP_SERVICE_LINE_ABS  = COURT_LENGTH - 6.4; // = 17.37 m
+  const YOUR_SERVICE_LINE_ABS = 6.4;
+  const OPP_SERVICE_LINE_ABS  = COURT_LENGTH - 6.4;
+
+  // Friction factor on horizontal velocity per bounce
+  const BOUNCE_HORIZ_FRICTION = 0.85;
+  // Spin reduction per bounce
+  const BOUNCE_SPIN_DECAY     = 0.60;
 
   let chart = null;
 
   function r2(n) { return Math.round(n * 100) / 100; }
 
-  // ── Simulation — origin is always 0 (absolute court coords) ──────────
-  // hitX = absolute position the ball is struck from
-  function simulate(initVel, angleDeg, initHeight, omega, hitX) {
-    if (initVel === 0) return { pts: [{x: hitX, y: initHeight, t: 0}], maxY: initHeight, totalTime: 0, netHeightAtX: null, clearsNet: false };
-
-    const angle = angleDeg * Math.PI / 180;
-    let vx = initVel * Math.cos(angle);
-    let vy = initVel * Math.sin(angle);
-    // start at absolute hitX
-    let x = hitX, y = initHeight, t = 0;
-    const pts = [{ x, y, t }];
-    let maxY = initHeight;
+  /**
+   * Simulate one "flight arc" from (x0, y0) with initial (vx0, vy0) and omega.
+   * Returns array of {x, y, t} points, stopping when y <= 0.
+   * tOffset shifts the time stamps.
+   */
+  function simulateArc(x0, y0, vx0, vy0, omega, tOffset) {
+    let vx = vx0, vy = vy0;
+    let x = x0, y = y0, t = 0;
+    const pts = [{ x, y, t: tOffset }];
+    let maxY = y0;
     let netHeightAtX = null;
 
     while (y >= 0 && t < 30) {
@@ -445,39 +471,144 @@
       }
 
       if (y > maxY) maxY = y;
-      pts.push({ x, y, t });
+      pts.push({ x, y, t: tOffset + t });
     }
 
-    const clearsNet = netHeightAtX !== null && netHeightAtX > NET_HEIGHT;
-    return { pts, maxY, totalTime: t, netHeightAtX, clearsNet };
+    // Interpolate landing point more precisely
+    if (pts.length > 1) {
+      const last = pts[pts.length - 1];
+      const prev = pts[pts.length - 2];
+      if (last.y < 0 && prev.y >= 0) {
+        const frac = prev.y / (prev.y - last.y);
+        const landX = prev.x + frac * (last.x - prev.x);
+        pts[pts.length - 1] = { x: landX, y: 0, t: prev.t + frac * DT };
+      }
+    }
+
+    return {
+      pts,
+      maxY,
+      duration: t,
+      landX: pts[pts.length - 1].x,
+      landVx: vx,
+      landVy: vy,
+      netHeightAtX,
+    };
   }
 
-  function getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX) {
-    if (initVel === 0) return [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0 }];
+  /**
+   * Full multi-bounce simulation.
+   * Returns segments: array of arc point arrays (each its own colour group),
+   * plus first-arc stats for net clearance.
+   */
+  function simulate(initVel, angleDeg, initHeight, omega, hitX, cor, maxBounces) {
+    if (initVel === 0) {
+      return {
+        segments: [[{ x: hitX, y: initHeight, t: 0 }]],
+        bounceXs: [],
+        maxY: initHeight,
+        totalTime: 0,
+        netHeightAtX: null,
+        clearsNet: false,
+        firstLandX: hitX,
+      };
+    }
 
-    const { totalTime } = simulate(initVel, angleDeg, initHeight, omega, hitX);
+    const angle = angleDeg * Math.PI / 180;
+    let vx = initVel * Math.cos(angle);
+    let vy = initVel * Math.sin(angle);
+    let curX = hitX, curY = initHeight, curOmega = omega;
+    let tOffset = 0;
+    let overallMaxY = initHeight;
+    let firstNetHeight = null;
+    let firstLandX = null;
+
+    const segments = [];
+    const bounceXs = [];
+
+    for (let b = 0; b <= maxBounces; b++) {
+      const arc = simulateArc(curX, curY, vx, vy, curOmega, tOffset);
+      segments.push(arc.pts);
+
+      if (arc.maxY > overallMaxY) overallMaxY = arc.maxY;
+      if (b === 0) {
+        firstNetHeight = arc.netHeightAtX;
+        firstLandX = arc.landX;
+      }
+
+      tOffset += arc.duration;
+
+      // Stop if ball barely moved up
+      if (b < maxBounces && Math.abs(arc.landVy) > 0.1) {
+        bounceXs.push(arc.landX);
+        // Apply bounce: reflect vy with COR, reduce vx by friction
+        vx = arc.landVx * BOUNCE_HORIZ_FRICTION;
+        vy = -arc.landVy * cor;
+        curOmega = curOmega * BOUNCE_SPIN_DECAY;
+        curX = arc.landX;
+        curY = 0;
+      } else {
+        break;
+      }
+    }
+
+    const clearsNet = firstNetHeight !== null && firstNetHeight > NET_HEIGHT;
+    return {
+      segments,
+      bounceXs,
+      maxY: overallMaxY,
+      totalTime: tOffset,
+      netHeightAtX: firstNetHeight,
+      clearsNet,
+      firstLandX,
+    };
+  }
+
+  function getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX, cor, maxBounces) {
+    if (initVel === 0) return [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0, phase: 'Launch' }];
+
+    const { totalTime, bounceXs } = simulate(initVel, angleDeg, initHeight, omega, hitX, cor, maxBounces);
     const angle = angleDeg * Math.PI / 180;
     let vx = initVel * Math.cos(angle);
     let vy = initVel * Math.sin(angle);
     const printInterval = totalTime / steps;
     let nextPrint = printInterval;
     let x = hitX, y = initHeight, t = 0, step = 0;
-    const rows = [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0 }];
+    let curOmega = omega;
+    let bounceCount = 0;
+    let rows = [{ step: 0, xAbs: r2(hitX), xRel: 0, y: r2(initHeight), t: 0, phase: 'Launch', isBounce: false }];
 
-    while (y >= 0 && step < steps && t < 30) {
+    while (step < steps && t < 30) {
       const speed   = Math.sqrt(vx*vx + vy*vy);
       const dragX   = -DRAG_CONSTANT   * speed * vx;
       const dragY   = -DRAG_CONSTANT   * speed * vy;
-      const magnusY = -MAGNUS_CONSTANT * omega * vx;
-      const magnusX =  MAGNUS_CONSTANT * omega * vy;
+      const magnusY = -MAGNUS_CONSTANT * curOmega * vx;
+      const magnusX =  MAGNUS_CONSTANT * curOmega * vy;
+      const prevY = y;
       vx += (dragX + magnusX) * DT;
       vy += (GRAVITY + dragY + magnusY) * DT;
       x  += vx * DT;
       y  += vy * DT;
       t  += DT;
+
+      // Handle bounce
+      if (prevY >= 0 && y < 0 && bounceCount < maxBounces) {
+        y = 0;
+        vx = vx * BOUNCE_HORIZ_FRICTION;
+        vy = -vy * cor;
+        curOmega = curOmega * BOUNCE_SPIN_DECAY;
+        bounceCount++;
+        rows.push({ step: '↩', xAbs: r2(x), xRel: r2(x - hitX), y: 0, t: r2(t), phase: `Bounce ${bounceCount}`, isBounce: true });
+        if (Math.abs(vy) < 0.1) break;
+        continue;
+      }
+
+      if (y < 0 && bounceCount >= maxBounces) break;
+
       if (t >= nextPrint - DT / 2) {
         step++;
-        rows.push({ step, xAbs: r2(x), xRel: r2(x - hitX), y: r2(y), t: r2(t) });
+        const phase = bounceCount === 0 ? 'Flight' : `After bounce ${bounceCount}`;
+        rows.push({ step, xAbs: r2(x), xRel: r2(x - hitX), y: r2(Math.max(0, y)), t: r2(t), phase, isBounce: false });
         nextPrint += printInterval;
       }
     }
@@ -508,6 +639,8 @@
     requestAnimationFrame(tick);
   }
 
+  const BOUNCE_COLORS = ['#FFB74D', '#FF8A65', '#F06292', '#BA68C8', '#4FC3F7', '#81C784'];
+
   function update() {
     const initVel    = parseFloat(document.getElementById('vel').value);
     const angleDeg   = parseFloat(document.getElementById('ang').value);
@@ -515,16 +648,22 @@
     const spinRPM    = parseFloat(document.getElementById('spin').value);
     const steps      = parseInt(document.getElementById('steps').value);
     const hitX       = parseFloat(document.getElementById('hitpos').value);
+    const cor        = parseFloat(document.getElementById('cor').value);
+    const maxBounces = parseInt(document.getElementById('bounces').value);
     const omega      = spinRPM * (2 * Math.PI / 60);
 
     document.getElementById('position-description').textContent = positionLabel(hitX);
 
-    const { pts, maxY, totalTime, netHeightAtX, clearsNet } = simulate(initVel, angleDeg, initHeight, omega, hitX);
-    const finalX = pts[pts.length - 1].x;
+    const { segments, bounceXs, maxY, totalTime, netHeightAtX, clearsNet, firstLandX } = simulate(initVel, angleDeg, initHeight, omega, hitX, cor, maxBounces);
 
-    animateValue(document.getElementById('s-range'),  r2(finalX - hitX));
-    animateValue(document.getElementById('s-height'), r2(maxY));
-    animateValue(document.getElementById('s-time'),   r2(totalTime));
+    // Range = furthest x reached across all segments
+    const allPts = segments.flat();
+    const finalX = allPts.reduce((mx, p) => Math.max(mx, p.x), hitX);
+
+    animateValue(document.getElementById('s-range'),   r2(finalX - hitX));
+    animateValue(document.getElementById('s-height'),  r2(maxY));
+    animateValue(document.getElementById('s-time'),    r2(totalTime));
+    document.getElementById('s-bounces').textContent = bounceXs.length;
     document.getElementById('s-spin').textContent =
       spinRPM >  200 ? '🎾 Topspin' :
       spinRPM < -200 ? '🔄 Backspin' : '📌 Flat';
@@ -544,117 +683,102 @@
       badge.className = 'net-status hit';
     }
 
-    const skip     = Math.max(1, Math.floor(pts.length / 400));
-    const chartPts = pts.filter((_,i) => i % skip === 0).map(p => ({ x: r2(p.x), y: r2(p.y) }));
-    const xMax     = Math.max(finalX * 1.05, COURT_LENGTH + 1);
-    const lineH    = 1.2; // short tick height for lines
+    const xMax = Math.max(finalX * 1.05, COURT_LENGTH + 1);
+    const lineH = 1.2;
+    const skip  = Math.max(1, Math.floor(allPts.length / 400));
+
+    // Build chart datasets
+    const datasets = [];
+
+    // First arc = green
+    const firstSeg = segments[0];
+    const skipFirst = Math.max(1, Math.floor(firstSeg.length / 300));
+    datasets.push({
+      data: firstSeg.filter((_,i) => i % skipFirst === 0).map(p => ({ x: r2(p.x), y: r2(Math.max(0,p.y)) })),
+      showLine: true,
+      borderColor: '#4CAF50',
+      backgroundColor: 'transparent',
+      pointRadius: 0,
+      borderWidth: 3,
+      tension: 0.4,
+      fill: false,
+      order: 1
+    });
+
+    // Subsequent bounce arcs — different colours, dashed
+    for (let b = 1; b < segments.length; b++) {
+      const seg = segments[b];
+      const c = BOUNCE_COLORS[(b-1) % BOUNCE_COLORS.length];
+      const skipB = Math.max(1, Math.floor(seg.length / 200));
+      datasets.push({
+        data: seg.filter((_,i) => i % skipB === 0).map(p => ({ x: r2(p.x), y: r2(Math.max(0,p.y)) })),
+        showLine: true,
+        borderColor: c,
+        backgroundColor: 'transparent',
+        pointRadius: 0,
+        borderWidth: 2.5,
+        borderDash: [6, 4],
+        tension: 0.4,
+        fill: false,
+        order: 1
+      });
+    }
+
+    // Bounce point markers
+    bounceXs.forEach((bx, i) => {
+      const c = BOUNCE_COLORS[i % BOUNCE_COLORS.length];
+      datasets.push({
+        data: [{ x: r2(bx), y: 0 }],
+        showLine: false,
+        borderColor: c,
+        backgroundColor: c,
+        pointRadius: 7,
+        pointStyle: 'circle',
+        order: 0
+      });
+    });
+
+    // Court lines
+    datasets.push({ data: [{ x: NET_X_ABS, y: 0 }, { x: NET_X_ABS, y: NET_HEIGHT }], showLine: true, borderColor: '#FF6B6B', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 4, fill: false, order: 2 });
+    datasets.push({ data: [{ x: YOUR_SERVICE_LINE_ABS, y: 0 }, { x: YOUR_SERVICE_LINE_ABS, y: lineH }], showLine: true, borderColor: '#FFC107', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, borderDash: [4,4], fill: false, order: 3 });
+    datasets.push({ data: [{ x: OPP_SERVICE_LINE_ABS, y: 0 }, { x: OPP_SERVICE_LINE_ABS, y: lineH }], showLine: true, borderColor: '#64B5F6', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, borderDash: [4,4], fill: false, order: 4 });
+    datasets.push({ data: [{ x: 0, y: 0 }, { x: 0, y: lineH }], showLine: true, borderColor: '#FF9800', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, borderDash: [4,4], fill: false, order: 5 });
+    datasets.push({ data: [{ x: COURT_LENGTH, y: 0 }, { x: COURT_LENGTH, y: lineH }], showLine: true, borderColor: '#FF9800', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, borderDash: [4,4], fill: false, order: 6 });
+    if (hitX > 0.05) {
+      datasets.push({ data: [{ x: hitX, y: 0 }, { x: hitX, y: initHeight + 0.3 }], showLine: true, borderColor: '#CE93D8', backgroundColor: 'transparent', pointRadius: 0, borderWidth: 2, borderDash: [3,3], fill: false, order: 7 });
+    }
 
     if (chart) {
-      chart.data.datasets = [
-        // Ball trajectory
-        {
-          data: chartPts,
-          showLine: true,
-          borderColor: '#4CAF50',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 3,
-          tension: 0.4,
-          fill: false,
-          order: 1
-        },
-        // Net
-        {
-          data: [{ x: NET_X_ABS, y: 0 }, { x: NET_X_ABS, y: NET_HEIGHT }],
-          showLine: true,
-          borderColor: '#FF6B6B',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 4,
-          fill: false,
-          order: 2
-        },
-        // Your service line
-        {
-          data: [{ x: YOUR_SERVICE_LINE_ABS, y: 0 }, { x: YOUR_SERVICE_LINE_ABS, y: lineH }],
-          showLine: true,
-          borderColor: '#FFC107',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 2,
-          borderDash: [4, 4],
-          fill: false,
-          order: 3
-        },
-        // Opponent's service line
-        {
-          data: [{ x: OPP_SERVICE_LINE_ABS, y: 0 }, { x: OPP_SERVICE_LINE_ABS, y: lineH }],
-          showLine: true,
-          borderColor: '#64B5F6',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 2,
-          borderDash: [4, 4],
-          fill: false,
-          order: 4
-        },
-        // Your baseline
-        {
-          data: [{ x: 0, y: 0 }, { x: 0, y: lineH }],
-          showLine: true,
-          borderColor: '#FF9800',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 2,
-          borderDash: [4, 4],
-          fill: false,
-          order: 5
-        },
-        // Opponent's baseline
-        {
-          data: [{ x: COURT_LENGTH, y: 0 }, { x: COURT_LENGTH, y: lineH }],
-          showLine: true,
-          borderColor: '#FF9800',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 2,
-          borderDash: [4, 4],
-          fill: false,
-          order: 6
-        },
-        // Hit position marker (vertical dashed line)
-        ...(hitX > 0.05 ? [{
-          data: [{ x: hitX, y: 0 }, { x: hitX, y: initHeight + 0.3 }],
-          showLine: true,
-          borderColor: '#CE93D8',
-          backgroundColor: 'transparent',
-          pointRadius: 0,
-          borderWidth: 2,
-          borderDash: [3, 3],
-          fill: false,
-          order: 7
-        }] : [])
-      ];
+      chart.data.datasets = datasets;
       chart.options.scales.x.min = Math.min(hitX - 0.5, -0.5);
       chart.options.scales.x.max = xMax;
       chart.update('none');
     }
 
     // Table
-    const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX);
+    const rows = getTableRows(initVel, angleDeg, initHeight, omega, steps, hitX, cor, maxBounces);
     document.getElementById('tbl').innerHTML = rows.map((r, i) =>
-      `<tr${i===0?' class="active"':''}><td>${r.step}</td><td>${r.xAbs}</td><td>${r.xRel}</td><td>${r.y}</td><td>${r.t}</td></tr>`
+      `<tr class="${i===0?'active':''}${r.isBounce?' bounce-row':''}">
+        <td>${r.step}</td>
+        <td>${r.xAbs}</td>
+        <td>${r.xRel}</td>
+        <td>${r.y}</td>
+        <td>${r.t}</td>
+        <td style="color:${r.isBounce?'#FFB74D':'#81C784'};font-weight:700;">${r.phase}</td>
+      </tr>`
     ).join('');
   }
 
   function syncControls() {
     [
-      { s:'vel',    n:'vel-input',    min:0,     max:100   },
-      { s:'ang',    n:'ang-input',    min:-5,    max:45    },
-      { s:'ht',     n:'ht-input',     min:0.5,   max:5     },
-      { s:'spin',   n:'spin-input',   min:-5000, max:5000  },
-      { s:'steps',  n:'steps-input',  min:3,     max:20    },
-      { s:'hitpos', n:'hitpos-input', min:-10,   max:11.89 }
+      { s:'vel',     n:'vel-input',    min:0,     max:100   },
+      { s:'ang',     n:'ang-input',    min:-5,    max:45    },
+      { s:'ht',      n:'ht-input',     min:0.5,   max:5     },
+      { s:'spin',    n:'spin-input',   min:-5000, max:5000  },
+      { s:'steps',   n:'steps-input',  min:3,     max:20    },
+      { s:'hitpos',  n:'hitpos-input', min:-10,   max:11.89 },
+      { s:'cor',     n:'cor-input',    min:0,     max:0.95  },
+      { s:'bounces', n:'bounces-input',min:0,     max:6     },
     ].forEach(({ s, n, min, max }) => {
       const sl = document.getElementById(s);
       const nu = document.getElementById(n);
@@ -667,17 +791,16 @@
     });
   }
 
-  // ── Chart annotations via custom plugin ───────────────────────────────
   const courtLabelsPlugin = {
     id: 'courtLabels',
-    afterDraw(chart) {
-      const { ctx, scales: { x, y } } = chart;
+    afterDraw(ch) {
+      const { ctx, scales: { x, y } } = ch;
       const labels = [
-        { xVal: 0,                 text: 'Your baseline',      color: '#FF9800' },
+        { xVal: 0,                    text: 'Your baseline', color: '#FF9800' },
         { xVal: YOUR_SERVICE_LINE_ABS, text: 'Your svc line', color: '#FFC107' },
-        { xVal: NET_X_ABS,         text: 'Net',                color: '#FF6B6B' },
-        { xVal: OPP_SERVICE_LINE_ABS,  text: "Opp svc line",  color: '#64B5F6' },
-        { xVal: COURT_LENGTH,      text: "Opp baseline",       color: '#FF9800' },
+        { xVal: NET_X_ABS,            text: 'Net',           color: '#FF6B6B' },
+        { xVal: OPP_SERVICE_LINE_ABS,  text: "Opp svc line", color: '#64B5F6' },
+        { xVal: COURT_LENGTH,         text: "Opp baseline",  color: '#FF9800' },
       ];
       ctx.save();
       ctx.font = 'bold 10px sans-serif';
